@@ -1,1 +1,1 @@
-# Android-Bittrex-Api-Client
+# Bittrex Api for Android
