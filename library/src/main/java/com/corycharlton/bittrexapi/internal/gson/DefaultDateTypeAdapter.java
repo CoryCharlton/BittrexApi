@@ -45,7 +45,7 @@ import com.google.gson.stream.JsonWriter;
 // Original source: https://raw.githubusercontent.com/google/gson/master/gson/src/main/java/com/google/gson/DefaultDateTypeAdapter.java
 final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
 
-    private static final String SIMPLE_NAME = "DefaultDateTypeAdapter";
+    private static final String TAG = DefaultDateTypeAdapter.class.getSimpleName();
 
     private final Class<? extends Date> dateType;
     private final DateFormat enUsFormat;
@@ -132,9 +132,6 @@ final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(SIMPLE_NAME);
-        sb.append('(').append(localFormat.getClass().getSimpleName()).append(')');
-        return sb.toString();
+        return TAG + '(' + localFormat.getClass().getSimpleName() + ')';
     }
 }

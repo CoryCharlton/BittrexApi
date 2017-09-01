@@ -2,9 +2,12 @@ package com.corycharlton.bittrexapi.internal.util;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 // Ported over from https://github.com/CoryCharlton/CCSWE.Core
 public final class Ensure {
+
+    private Ensure() {} // Cannot instantiate
 
     private static RuntimeException getException(@NonNull String message, @NonNull ExceptionType exceptionType) {
         switch (exceptionType) {
