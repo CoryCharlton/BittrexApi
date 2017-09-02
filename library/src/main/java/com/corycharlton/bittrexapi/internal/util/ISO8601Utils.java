@@ -15,6 +15,7 @@ import java.util.*;
 //Date parsing code from Jackson databind ISO8601Utils.java
 // https://github.com/FasterXML/jackson-databind/blob/master/src/main/java/com/fasterxml/jackson/databind/util/ISO8601Utils.java
 // Original Source: https://raw.githubusercontent.com/google/gson/master/gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java
+@SuppressWarnings("WeakerAccess")
 public final class ISO8601Utils
 {
     /**

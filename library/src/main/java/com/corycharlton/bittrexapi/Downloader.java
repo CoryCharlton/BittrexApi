@@ -4,11 +4,12 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.util.Ensure;
+import com.corycharlton.bittrexapi.internal.Header;
 
 import java.io.IOException;
 
 public interface Downloader {
-    Response load(@NonNull Uri uri) throws IOException;
+    Response load(@NonNull Uri uri, Header apisign) throws IOException;
 
     class ResponseException extends IOException {
         final int responseCode;

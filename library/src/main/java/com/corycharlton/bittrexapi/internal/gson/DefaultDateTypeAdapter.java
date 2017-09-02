@@ -43,6 +43,7 @@ import com.google.gson.stream.JsonWriter;
  */
 
 // Original source: https://raw.githubusercontent.com/google/gson/master/gson/src/main/java/com/google/gson/DefaultDateTypeAdapter.java
+@SuppressWarnings("WeakerAccess")
 final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
 
     private static final String TAG = DefaultDateTypeAdapter.class.getSimpleName();

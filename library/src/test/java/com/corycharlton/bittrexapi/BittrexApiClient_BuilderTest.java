@@ -8,8 +8,6 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertEquals;
-
 @RunWith(Enclosed.class)
 @SuppressWarnings("ConstantConditions")
 public class BittrexApiClient_BuilderTest {

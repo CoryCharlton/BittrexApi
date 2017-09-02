@@ -7,11 +7,15 @@ import android.util.Log;
 
 import com.corycharlton.bittrexapi.BittrexApiClient;
 import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
+import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
+import com.corycharlton.bittrexapi.response.GetMarketHistoryResponse;
+import com.corycharlton.bittrexapi.response.GetMarketSummariesResponse;
+import com.corycharlton.bittrexapi.response.GetMarketSummaryResponse;
+import com.corycharlton.bittrexapi.response.GetMarketsResponse;
+import com.corycharlton.bittrexapi.response.GetOrderBookResponse;
+import com.corycharlton.bittrexapi.response.GetTickerResponse;
 
 import java.io.IOException;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,9 +28,10 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         try {
-            Log.e(BittrexApiLibraryInfo.TAG, new BittrexApiClient.Builder("12345", "54321").build().getMarkets().toString());
+            GetMarketHistoryResponse response = new BittrexApiClient.Builder("12345", "54321").build().getMarketHistory("BTC-LTC");
+            Log.e(BittrexApiLibraryInfo.TAG, response.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(BittrexApiLibraryInfo.TAG, e.toString(), e);
         }
     }
 }

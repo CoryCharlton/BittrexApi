@@ -2,9 +2,17 @@ package com.corycharlton.bittrexapi;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.corycharlton.bittrexapi.data.Market;
 import com.corycharlton.bittrexapi.internal.gson.GsonFactory;
+import com.corycharlton.bittrexapi.internal.util.Ensure;
+import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
+import com.corycharlton.bittrexapi.response.GetMarketHistoryResponse;
+import com.corycharlton.bittrexapi.response.GetMarketSummariesResponse;
+import com.corycharlton.bittrexapi.response.GetMarketSummaryResponse;
+import com.corycharlton.bittrexapi.response.GetMarketsResponse;
+import com.corycharlton.bittrexapi.response.GetOrderBookResponse;
+import com.corycharlton.bittrexapi.response.GetTickerResponse;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -29,15 +37,73 @@ public class BittrexApiClient {
         secret = builder.secret;
     }
 
-    public Response<List<Market>> getMarkets() throws IOException {
-        return GsonFactory.getGson().fromJson(downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getmarkets")).getResponseString(), new TypeToken<Response<List<Market>>>(){}.getType());
+    private Uri buildUri(@NonNull String url, List<Object> parameters, boolean requiresAuthenticaton) {
+        return Uri.parse("blag");
+    }
+
+    public GetCurrenciesResponse getCurrencies() throws IOException {
+        final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getcurrencies"), null).getResponseString();
+        Log.w(BittrexApiLibraryInfo.TAG, response);
+
+        return GsonFactory.getGson().fromJson(response, GetCurrenciesResponse.class);
+    }
+
+    public GetMarketsResponse getMarkets() throws IOException {
+        final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getmarkets"), null).getResponseString();
+        Log.w(BittrexApiLibraryInfo.TAG, response);
+
+        return GsonFactory.getGson().fromJson(response, GetMarketsResponse.class);
+    }
+
+    public GetMarketHistoryResponse getMarketHistory(@NonNull String market) throws IOException {
+        Ensure.isNotNullOrWhitespace("market", market);
+
+        final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getmarkethistory?market=" + market.trim()), null).getResponseString();
+        Log.w(BittrexApiLibraryInfo.TAG, response);
+
+        return GsonFactory.getGson().fromJson(response, GetMarketHistoryResponse.class);
+    }
+
+    public GetMarketSummariesResponse getMarketSummaries() throws IOException {
+        final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getmarketsummaries"), null).getResponseString();
+        Log.w(BittrexApiLibraryInfo.TAG, response);
+
+        return GsonFactory.getGson().fromJson(response, GetMarketSummariesResponse.class);
+    }
+
+    public GetMarketSummaryResponse getMarketSummary(@NonNull String market) throws IOException {
+        Ensure.isNotNullOrWhitespace("market", market);
+
+        final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getmarketsummary?market=" + market.trim()), null).getResponseString();
+        Log.w(BittrexApiLibraryInfo.TAG, response);
+
+        return GsonFactory.getGson().fromJson(response, GetMarketSummaryResponse.class);
+    }
+
+    // TODO: Expose the 'type' parameter?
+    public GetOrderBookResponse getOrderBook(@NonNull String market) throws IOException {
+        Ensure.isNotNullOrWhitespace("market", market);
+
+        final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getorderbook?market=" + market.trim() + "&type=both"), null).getResponseString();
+        Log.w(BittrexApiLibraryInfo.TAG, response);
+
+        return GsonFactory.getGson().fromJson(response, GetOrderBookResponse.class);
+    }
+
+    public GetTickerResponse getTicker(@NonNull String market) throws IOException {
+        Ensure.isNotNullOrWhitespace("market", market);
+
+        final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getticker?market=" + market.trim()), null).getResponseString();
+        Log.w(BittrexApiLibraryInfo.TAG, response);
+
+        return GsonFactory.getGson().fromJson(response, GetTickerResponse.class);
     }
 
     public static final class Builder {
 
         private Downloader downloader;
-        private String key;
-        private String secret;
+        private final String key;
+        private final String secret;
 
         public Builder(@NonNull String key, @NonNull String secret) {
             isNotNullOrWhitespace("key", key);
