@@ -28,8 +28,17 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         try {
-            GetMarketHistoryResponse response = new BittrexApiClient.Builder("12345", "54321").build().getMarketHistory("BTC-LTC");
-            Log.e(BittrexApiLibraryInfo.TAG, response.toString());
+            final BittrexApiClient client =  new BittrexApiClient.Builder("12345", "54321").build();
+
+            GetCurrenciesResponse response1 = client.getCurrencies();
+            /*
+            GetMarketHistoryResponse response2 = client.getMarketHistory("BTC-LTC");
+            GetMarketsResponse response3 = client.getMarkets();
+            GetMarketSummariesResponse response4 = client.getMarketSummaries();
+            GetMarketSummaryResponse response5 = client.getMarketSummary("BTC-LTC");
+            GetOrderBookResponse response6 = client.getOrderBook("BTC-LTC");
+            GetTickerResponse response7 = client.getTicker("BTC-LTC");
+            */
         } catch (IOException e) {
             Log.e(BittrexApiLibraryInfo.TAG, e.toString(), e);
         }

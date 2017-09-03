@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.constants.HttpHeader;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
-import com.corycharlton.bittrexapi.internal.Header;
+import com.corycharlton.bittrexapi.internal.NameValuePair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.net.URL;
 
 public class UrlConnectionDownloader implements Downloader {
 
-    @Override public Response load(@NonNull Uri uri, Header apisign) throws IOException {
+    @Override public Response load(@NonNull Uri uri, NameValuePair apisign) throws IOException {
 
         HttpURLConnection connection = openConnection(uri);
         connection.setUseCaches(false);

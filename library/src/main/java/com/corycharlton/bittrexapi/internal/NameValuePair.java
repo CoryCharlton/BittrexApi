@@ -1,12 +1,12 @@
 package com.corycharlton.bittrexapi.internal;
 
-public class Header {
+public class NameValuePair {
     private final String _name;
     private final String _value;
 
-    public Header(String name, String value) {
-        _name = name;
-        _value = value;
+    public NameValuePair(String name, String value) {
+        _name = name.trim();
+        _value = value.trim();
     }
 
     public String name() {
