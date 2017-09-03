@@ -30,4 +30,17 @@ before_script:
   - adb shell input keyevent 82 &
 
 script: 
-  - "./gradlew clean build connectedCheck"
+  - ./gradlew check -PdisablePreDex --continue --stacktrace
+  - ./gradlew connectedAndroidTest -PdisablePreDex --continue --stacktrace
+
+after_failure:
+  - wget http://imgur.com/tools/imgurbash.sh
+  - chmod a+x imgurbash.sh
+  - adb shell screencap -p | sed 's/\r$//' &gt; screen.png
+  - ./imgurbash.sh screen.png
+  - pandoc builder/build/reports/tests/index.html -t plain | sed -n '/^Failed tests/,/default-package/p'
+
+after_success:
+  - ./gradlew jacocoFullReport
+  - pip install --user codecov
+  - codecov
