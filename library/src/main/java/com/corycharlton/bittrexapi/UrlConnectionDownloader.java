@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.constants.HttpHeader;
+import com.corycharlton.bittrexapi.internal.util.Ensure;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
 import com.corycharlton.bittrexapi.internal.NameValuePair;
 
@@ -15,16 +16,17 @@ import java.net.URL;
 
 public class UrlConnectionDownloader implements Downloader {
 
-    @Override public Response load(@NonNull Uri uri, NameValuePair apisign) throws IOException {
+    @Override public Response execute(@NonNull Request request) throws IOException {
+        Ensure.isNotNull("request", request);
 
-        HttpURLConnection connection = openConnection(uri);
+        HttpURLConnection connection = openConnection(request.uri());
         connection.setUseCaches(false);
 
         connection.addRequestProperty(HttpHeader.Accept, "application/json");
         connection.addRequestProperty(HttpHeader.CacheControl, "no-cache, no-store, must-revalidate");
 
-        if (apisign != null && !StringUtils.isNullOrWhiteSpace(apisign.name()) && !StringUtils.isNullOrWhiteSpace(apisign.value())) {
-            connection.addRequestProperty(apisign.name(), apisign.value());
+        for (NameValuePair header : request.headers()) {
+            connection.addRequestProperty(header.name(), header.value());
         }
 
         int responseCode = connection.getResponseCode();

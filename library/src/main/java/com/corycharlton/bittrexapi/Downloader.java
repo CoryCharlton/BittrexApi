@@ -7,16 +7,34 @@ import com.corycharlton.bittrexapi.internal.util.Ensure;
 import com.corycharlton.bittrexapi.internal.NameValuePair;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public interface Downloader {
-    Response load(@NonNull Uri uri, NameValuePair apisign) throws IOException;
+    Response execute(@NonNull Request request) throws IOException;
 
-    class ResponseException extends IOException {
-        final int responseCode;
+    final class Request {
+        private final ArrayList<NameValuePair> _headers;
+        private final Uri _uri;
 
-        public ResponseException(String message, int responseCode) {
-            super(message);
-            this.responseCode = responseCode;
+        Request(@NonNull Uri uri) {
+            this(uri, null);
+        }
+
+        Request(@NonNull Uri uri, ArrayList<NameValuePair> headers) {
+            Ensure.isNotNull("uri", uri);
+
+            _headers = headers != null ? headers : new ArrayList<NameValuePair>();
+            _uri = uri;
+        }
+
+        @NonNull
+        public ArrayList<NameValuePair> headers() {
+            return _headers;
+        }
+
+        @NonNull
+        public Uri uri() {
+            return _uri;
         }
     }
 
@@ -24,7 +42,7 @@ public interface Downloader {
         private final int _responseCode;
         private final String _responseString;
 
-        Response(@NonNull String responseString, int responseCode) {
+        public Response(@NonNull String responseString, int responseCode) {
             Ensure.isNotNull("responseString", responseString);
 
             _responseCode = responseCode;
@@ -37,6 +55,15 @@ public interface Downloader {
 
         public String getResponseString() {
             return _responseString;
+        }
+    }
+
+    class ResponseException extends IOException {
+        final int responseCode;
+
+        public ResponseException(String message, int responseCode) {
+            super(message);
+            this.responseCode = responseCode;
         }
     }
 }
