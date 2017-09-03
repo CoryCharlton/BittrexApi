@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.corycharlton.bittrexapi.internal.gson.GsonFactory;
+import com.corycharlton.bittrexapi.internal.gson.Gson;
 import com.corycharlton.bittrexapi.internal.util.Ensure;
 import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
 import com.corycharlton.bittrexapi.response.GetMarketHistoryResponse;
@@ -13,7 +13,6 @@ import com.corycharlton.bittrexapi.response.GetMarketSummaryResponse;
 import com.corycharlton.bittrexapi.response.GetMarketsResponse;
 import com.corycharlton.bittrexapi.response.GetOrderBookResponse;
 import com.corycharlton.bittrexapi.response.GetTickerResponse;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.List;
@@ -45,14 +44,14 @@ public class BittrexApiClient {
         final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getcurrencies"), null).getResponseString();
         Log.w(BittrexApiLibraryInfo.TAG, response);
 
-        return GsonFactory.getGson().fromJson(response, GetCurrenciesResponse.class);
+        return Gson.fromJson(response, GetCurrenciesResponse.class);
     }
 
     public GetMarketsResponse getMarkets() throws IOException {
         final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getmarkets"), null).getResponseString();
         Log.w(BittrexApiLibraryInfo.TAG, response);
 
-        return GsonFactory.getGson().fromJson(response, GetMarketsResponse.class);
+        return Gson.fromJson(response, GetMarketsResponse.class);
     }
 
     public GetMarketHistoryResponse getMarketHistory(@NonNull String market) throws IOException {
@@ -61,14 +60,14 @@ public class BittrexApiClient {
         final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getmarkethistory?market=" + market.trim()), null).getResponseString();
         Log.w(BittrexApiLibraryInfo.TAG, response);
 
-        return GsonFactory.getGson().fromJson(response, GetMarketHistoryResponse.class);
+        return Gson.fromJson(response, GetMarketHistoryResponse.class);
     }
 
     public GetMarketSummariesResponse getMarketSummaries() throws IOException {
         final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getmarketsummaries"), null).getResponseString();
         Log.w(BittrexApiLibraryInfo.TAG, response);
 
-        return GsonFactory.getGson().fromJson(response, GetMarketSummariesResponse.class);
+        return Gson.fromJson(response, GetMarketSummariesResponse.class);
     }
 
     public GetMarketSummaryResponse getMarketSummary(@NonNull String market) throws IOException {
@@ -77,7 +76,7 @@ public class BittrexApiClient {
         final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getmarketsummary?market=" + market.trim()), null).getResponseString();
         Log.w(BittrexApiLibraryInfo.TAG, response);
 
-        return GsonFactory.getGson().fromJson(response, GetMarketSummaryResponse.class);
+        return Gson.fromJson(response, GetMarketSummaryResponse.class);
     }
 
     // TODO: Expose the 'type' parameter?
@@ -87,7 +86,7 @@ public class BittrexApiClient {
         final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getorderbook?market=" + market.trim() + "&type=both"), null).getResponseString();
         Log.w(BittrexApiLibraryInfo.TAG, response);
 
-        return GsonFactory.getGson().fromJson(response, GetOrderBookResponse.class);
+        return Gson.fromJson(response, GetOrderBookResponse.class);
     }
 
     public GetTickerResponse getTicker(@NonNull String market) throws IOException {
@@ -96,7 +95,7 @@ public class BittrexApiClient {
         final String response = downloader.load(Uri.parse("https://bittrex.com/api/v1.1/public/getticker?market=" + market.trim()), null).getResponseString();
         Log.w(BittrexApiLibraryInfo.TAG, response);
 
-        return GsonFactory.getGson().fromJson(response, GetTickerResponse.class);
+        return Gson.fromJson(response, GetTickerResponse.class);
     }
 
     public static final class Builder {

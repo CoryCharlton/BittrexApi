@@ -1,7 +1,7 @@
 package com.corycharlton.bittrexapi.response;
 
 
-import com.corycharlton.bittrexapi.internal.gson.GsonFactory;
+import com.corycharlton.bittrexapi.internal.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
@@ -28,6 +28,6 @@ abstract class Response<T> {
 
     @Override
     public String toString() {
-        return GsonFactory.getGson().toJson(this);
+        return Gson.toJson(this);
     }
 }
