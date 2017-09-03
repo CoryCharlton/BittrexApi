@@ -7,13 +7,13 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 @RunWith(Enclosed.class)
-public class GsonFactoryTest {
+public class GsonTest {
 
     public static class When_getGson_is_called {
 
         @Test
         public void it_should_return_an_instance_of_Gson() {
-            assertNotNull(GsonFactory.getGson());
+            assertNotNull(Gson.getGson());
         }
     }
 }

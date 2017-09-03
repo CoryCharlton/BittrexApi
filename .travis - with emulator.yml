@@ -7,20 +7,28 @@ android:
   components:
     - tools
     - platform-tools
+    - android-22
     - android-26
     - build-tools-26.0.1
+    - sys-img-armeabi-v7a-android-22
 
 sudo: false
 
 before_install:
   - mkdir "$ANDROID_HOME/licenses" || true
   - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
 
 install: 
   - ./gradlew clean assemble assembleAndroidTest --stacktrace
 
+before_script:
+  - android-wait-for-emulator
+  - adb shell input keyevent 82
+
 script: 
-  - ./gradlew check test jacocoTestReport --stacktrace
+  - ./gradlew check connectedCheck test jacocoTestReport --stacktrace
   
 after_success:
   - bash <(curl -s https://codecov.io/bash)
