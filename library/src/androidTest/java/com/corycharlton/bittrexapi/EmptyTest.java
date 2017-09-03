@@ -1,5 +1,8 @@
 package com.corycharlton.bittrexapi;
 
+import android.support.annotation.Keep;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -8,8 +11,9 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("ConstantConditions")
 public class EmptyTest {
 
-    @Test()
+    @Keep
+    @Test
     public void This_test_is_empty() {
-
+        Assert.assertTrue(true != false);
     }
 }
