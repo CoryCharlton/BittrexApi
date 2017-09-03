@@ -9,6 +9,7 @@ import com.corycharlton.bittrexapi.internal.NameValuePair;
 import java.io.IOException;
 import java.util.ArrayList;
 
+@SuppressWarnings("WeakerAccess")
 public interface Downloader {
     Response execute(@NonNull Request request) throws IOException;
 
@@ -36,25 +37,37 @@ public interface Downloader {
         public Uri uri() {
             return _uri;
         }
+
+        @Override
+        public String toString() {
+            // TODO: Implement for convenience
+            return super.toString();
+            //return responseCode() + ": " + bodyString();
+        }
     }
 
     final class Response {
+        private final String _bodyString;
         private final int _responseCode;
-        private final String _responseString;
 
-        public Response(@NonNull String responseString, int responseCode) {
-            Ensure.isNotNull("responseString", responseString);
+        public Response(@NonNull String bodyString, int responseCode) {
+            Ensure.isNotNull("bodyString", bodyString);
 
+            _bodyString = bodyString;
             _responseCode = responseCode;
-            _responseString = responseString;
         }
 
-        public int getResponseCode() {
+        public String bodyString() {
+            return _bodyString;
+        }
+
+        public int responseCode() {
             return _responseCode;
         }
 
-        public String getResponseString() {
-            return _responseString;
+        @Override
+        public String toString() {
+            return responseCode() + ": " + bodyString();
         }
     }
 

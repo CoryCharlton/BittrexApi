@@ -8,16 +8,23 @@ import android.util.Log;
 import com.corycharlton.bittrexapi.BittrexApiClient;
 import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
 import com.corycharlton.bittrexapi.demo.settings.ApplicationSettings;
+import com.corycharlton.bittrexapi.response.GetBalanceResponse;
 import com.corycharlton.bittrexapi.response.GetBalancesResponse;
 import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
+import com.corycharlton.bittrexapi.response.GetDepositAddressResponse;
+import com.corycharlton.bittrexapi.response.GetDepositHistoryResponse;
 import com.corycharlton.bittrexapi.response.GetMarketHistoryResponse;
 import com.corycharlton.bittrexapi.response.GetMarketSummariesResponse;
 import com.corycharlton.bittrexapi.response.GetMarketSummaryResponse;
 import com.corycharlton.bittrexapi.response.GetMarketsResponse;
 import com.corycharlton.bittrexapi.response.GetOrderBookResponse;
+import com.corycharlton.bittrexapi.response.GetOrderHistoryResponse;
+import com.corycharlton.bittrexapi.response.GetOrderResponse;
 import com.corycharlton.bittrexapi.response.GetTickerResponse;
+import com.corycharlton.bittrexapi.response.GetWithdrawalHistoryResponse;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,9 +41,21 @@ public class MainActivity extends AppCompatActivity {
         try {
             final BittrexApiClient client =  new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret()).build();
 
+            GetOrderResponse response17 = client.getOrder(UUID.fromString("360f7031-e358-4bd0-9efc-2558b66d6157"));
 
-            GetBalancesResponse response8 = client.getBalances();
+
             /*
+            GetOrderHistoryResponse response15 = client.getOrderHistory("BTC-SC");
+            GetOrderHistoryResponse response16 = client.getOrderHistory();
+            GetDepositHistoryResponse response11 = client.getDepositHistory("BTC");
+            GetDepositHistoryResponse response12 = client.getDepositHistory();
+            GetWithdrawalHistoryResponse response13 = client.getWithdrawalHistory("BTC");
+            GetWithdrawalHistoryResponse response14 = client.getWithdrawalHistory();
+            GetDepositHistoryResponse response11 = client.getDepositHistory("BTC");
+            GetDepositHistoryResponse response12 = client.getDepositHistory();
+            GetDepositAddressResponse response10 = client.getDepositAddress("BTC");
+            GetBalanceResponse response9 = client.getBalance("BTC");
+            GetBalancesResponse response8 = client.getBalances();
             GetCurrenciesResponse response1 = client.getCurrencies();
             GetMarketHistoryResponse response2 = client.getMarketHistory("BTC-LTC");
             GetMarketsResponse response3 = client.getMarkets();

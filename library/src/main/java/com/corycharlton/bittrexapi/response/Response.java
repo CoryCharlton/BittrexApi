@@ -6,16 +6,16 @@ import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 abstract class Response<T> {
-    @SerializedName("success") private boolean _isSuccess;
     @SerializedName("message") private String _message;
+    @SerializedName("success") private boolean _success;
     @SerializedName("result") private T _result;
 
     protected Response() {
 
     }
 
-    public boolean isSuccess() {
-        return _isSuccess;
+    public boolean success() {
+        return _success;
     }
 
     public String message() {

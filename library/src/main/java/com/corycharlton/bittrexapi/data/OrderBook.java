@@ -7,16 +7,16 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class OrderBook {
     
-    @SerializedName("buy") private List<Order> _buys;
-    @SerializedName("sell") private List<Order> _sells;
+    @SerializedName("buy") private List<OrderBookEntry> _buys;
+    @SerializedName("sell") private List<OrderBookEntry> _sells;
 
     private OrderBook() {} // Cannot be instantiated
 
-    public List<Order> buys() {
+    public List<OrderBookEntry> buys() {
         return _buys;
     }
 
-    public List<Order> sells() {
+    public List<OrderBookEntry> sells() {
         return _sells;
     }
 }
