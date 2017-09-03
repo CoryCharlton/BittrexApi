@@ -9,12 +9,14 @@ android:
     - platform-tools
     - android-26
     - build-tools-26.0.1
-    - sys-img-x86_64-google_apis-25
+    - sys-img-armeabi-v7a-android-22
 
 sudo: false
 
 before_install:
-  - echo no | android create avd --force -n test -t android-25 --abi "google_apis/x86_64"
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
 
 install: 
