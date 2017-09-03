@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.corycharlton.bittrexapi.BittrexApiClient;
 import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
+import com.corycharlton.bittrexapi.demo.settings.ApplicationSettings;
+import com.corycharlton.bittrexapi.response.GetBalancesResponse;
 import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
 import com.corycharlton.bittrexapi.response.GetMarketHistoryResponse;
 import com.corycharlton.bittrexapi.response.GetMarketSummariesResponse;
@@ -24,14 +26,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ApplicationSettings.initialize(this);
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         try {
-            final BittrexApiClient client =  new BittrexApiClient.Builder("12345", "54321").build();
+            final BittrexApiClient client =  new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret()).build();
 
-            GetCurrenciesResponse response1 = client.getCurrencies();
+
+            GetBalancesResponse response8 = client.getBalances();
             /*
+            GetCurrenciesResponse response1 = client.getCurrencies();
             GetMarketHistoryResponse response2 = client.getMarketHistory("BTC-LTC");
             GetMarketsResponse response3 = client.getMarkets();
             GetMarketSummariesResponse response4 = client.getMarketSummaries();
