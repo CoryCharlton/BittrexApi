@@ -9,7 +9,7 @@ android:
     - platform-tools
     - android-26
     - build-tools-26.0.1
-	- sys-img-x86_64-google_apis-25
+    - sys-img-x86_64-google_apis-25
 
 sudo: false
 
