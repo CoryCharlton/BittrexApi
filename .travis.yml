@@ -1,27 +1,26 @@
 language: android
+
+jdk:
+  - oraclejdk8
+
 android:
   components:
     - tools
     - platform-tools
-    - tools
-
-    # The BuildTools version used by your project
-    - build-tools-26.0.0
-
-    # The SDK version used to compile your project
     - android-26
-    - android-22
+    - build-tools-26.0.1
 
-    # Additional components
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-19
+# as per http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
+sudo: false
 
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
-    - sys-img-armeabi-v7a-android-22
+# script for build and release via Travis to Bintray
+script: ./gradlew build
 
-script: 
-  - ./gradlew check -PdisablePreDex --continue --stacktrace
-  - ./gradlew build -PdisablePreDex --continue --stacktrace
+notifications:
+  email: false
+
+# cache between builds
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.gradle
