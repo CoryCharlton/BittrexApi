@@ -14,7 +14,7 @@ android:
 sudo: false
 
 before_install:
-  - echo no | android create avd --force -n test -t android-25 --abi x86_64
+  - echo no | android create avd --force -n test -t android-25 --abi "google_apis/x86_64"
   - emulator -avd test -no-audio -no-window &
 
 install: 
