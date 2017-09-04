@@ -13,6 +13,7 @@ import com.corycharlton.bittrexapi.data.Order;
 import com.corycharlton.bittrexapi.data.OrderBook;
 import com.corycharlton.bittrexapi.data.OrderBookEntry;
 import com.corycharlton.bittrexapi.data.OrderHistory;
+import com.corycharlton.bittrexapi.data.OrderId;
 import com.corycharlton.bittrexapi.data.Ticker;
 import com.corycharlton.bittrexapi.data.Withdrawal;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
@@ -44,6 +45,21 @@ public class BittrexApiClientTest {
     @NonNull
     private static BittrexApiClient getClient() {
         return new BittrexApiClient.Builder(key, secret).downloader(new MockDownloader()).build();
+    }
+
+    public static class When_cancelOrder_is_called {
+        @Test()
+        public void it_should_parse_response() throws IOException {
+            final CancelOrderResponse response = getClient().cancelOrder(UUID.randomUUID());
+
+            assertNotNull(response);
+            assertTrue(response.success());
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_parameter_is_null() throws IOException {
+            getClient().cancelOrder(null);
+        }
     }
 
     public static class When_getBalance_is_called {
@@ -528,6 +544,88 @@ public class BittrexApiClientTest {
         }
     }
 
+    public static class When_placeBuyLimitOrder_is_called {
+        @Test()
+        public void it_should_parse_response() throws IOException {
+            final PlaceBuyLimitOrderResponse response = getClient().placeBuyLimitOrder("BTC-LTC", 1.00000, 0.00000123);
+
+            assertNotNull(response);
+            assertTrue(response.success());
+
+            final OrderId item = response.result();
+
+            assertNotNull(item);
+
+            assertEquals("57aac6c3-197f-45e0-af29-cd650cc5dea8", item.uuid().toString());
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_market_is_empty() throws IOException {
+            getClient().placeBuyLimitOrder(StringUtils.EMPTY, 1.00000000, 0.00000123);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_market_is_null() throws IOException {
+            getClient().placeBuyLimitOrder(null, 1.00000000, 0.00000123);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
+            getClient().placeBuyLimitOrder(" \t\r\n", 1.00000000, 0.00000123);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_quantity_is_less_than_or_equal_to_zero() throws IOException {
+            getClient().placeBuyLimitOrder("BTC-LTC", 0.00000000, 0.00000123);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_rate_is_less_than_or_equal_to_zero() throws IOException {
+            getClient().placeBuyLimitOrder("BTC-LTC", 1.00000000, 0.00000000);
+        }
+    }
+
+    public static class When_placeSellLimitOrder_is_called {
+        @Test()
+        public void it_should_parse_response() throws IOException {
+            final PlaceSellLimitOrderResponse response = getClient().placeSellLimitOrder("BTC-LTC", 1.00000, 0.00000123);
+
+            assertNotNull(response);
+            assertTrue(response.success());
+
+            final OrderId item = response.result();
+
+            assertNotNull(item);
+
+            assertEquals("57aac6c3-197f-45e0-af29-cd650cc5dea8", item.uuid().toString());
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_market_is_empty() throws IOException {
+            getClient().placeSellLimitOrder(StringUtils.EMPTY, 1.00000000, 0.00000123);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_market_is_null() throws IOException {
+            getClient().placeSellLimitOrder(null, 1.00000000, 0.00000123);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
+            getClient().placeSellLimitOrder(" \t\r\n", 1.00000000, 0.00000123);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_quantity_is_less_than_or_equal_to_zero() throws IOException {
+            getClient().placeSellLimitOrder("BTC-LTC", 0.00000000, 0.00000123);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_rate_is_less_than_or_equal_to_zero() throws IOException {
+            getClient().placeSellLimitOrder("BTC-LTC", 1.00000000, 0.00000000);
+        }
+    }
+
     static final class MockDownloader implements Downloader {
 
         @Override
@@ -539,6 +637,8 @@ public class BittrexApiClientTest {
             }
 
             switch (url) {
+                case BittrexApiClient.URL_CANCELORDER:
+                    return handleCancelOrder();
                 case BittrexApiClient.URL_GETBALANCE:
                     return handleGetBalance();
                 case BittrexApiClient.URL_GETBALANCES:
@@ -567,9 +667,24 @@ public class BittrexApiClientTest {
                     return handleGetTicker();
                 case BittrexApiClient.URL_GETWITHDRAWALHISTORY:
                     return handleGetWithdrawalHistory();
+                case BittrexApiClient.URL_PLACEBUYLIMITORDER:
+                    return handlePlaceBuyLimitOrder();
+                case BittrexApiClient.URL_PLACESELLLIMITORDER:
+                    return handlePlaceSellLimitOrder();
                 default:
                     throw new IllegalArgumentException("No mock configured for " + url);
             }
+        }
+
+        @NonNull
+        private Response handleCancelOrder() {
+            return new Response("{\n" +
+                    "\t\"success\": true,\n" +
+                    "\t\"message\": \"\",\n" +
+                    "\t\"result\": {\n" +
+                    "\t\t\"uuid\": \"57aac6c3-197f-45e0-af29-cd650cc5dea8\"\n" +
+                    "\t}\n" +
+                    "}\n", 200);
         }
 
         @NonNull
@@ -922,6 +1037,28 @@ public class BittrexApiClientTest {
                     "\t\t\t\"InvalidAddress\": false\n" +
                     "\t\t}\n" +
                     "\t]\n" +
+                    "}\n", 200);
+        }
+
+        @NonNull
+        private Response handlePlaceBuyLimitOrder() {
+            return new Response("{\n" +
+                    "\t\"success\": true,\n" +
+                    "\t\"message\": \"\",\n" +
+                    "\t\"result\": {\n" +
+                    "\t\t\"uuid\": \"57aac6c3-197f-45e0-af29-cd650cc5dea8\"\n" +
+                    "\t}\n" +
+                    "}\n", 200);
+        }
+
+        @NonNull
+        private Response handlePlaceSellLimitOrder() {
+            return new Response("{\n" +
+                    "\t\"success\": true,\n" +
+                    "\t\"message\": \"\",\n" +
+                    "\t\"result\": {\n" +
+                    "\t\t\"uuid\": \"57aac6c3-197f-45e0-af29-cd650cc5dea8\"\n" +
+                    "\t}\n" +
                     "}\n", 200);
         }
     }

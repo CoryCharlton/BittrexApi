@@ -36,6 +36,14 @@ public final class Ensure {
         isValid(name, !StringUtils.isNullOrWhiteSpace(value), message, ExceptionType.IllegalArgumentException);
     }
 
+    public static void isTrue(@NonNull String name, boolean expression) {
+        isTrue(name, expression, null);
+    }
+
+    public static void isTrue(@NonNull String name, boolean expression, @Nullable String message) {
+        isValid(name, expression, message, ExceptionType.IllegalArgumentException);
+    }
+
     private static void isValid(@NonNull String name, boolean expression, @Nullable String message, @NonNull ExceptionType exceptionType) {
         if (StringUtils.isNullOrWhiteSpace(name)) {
             throw new IllegalArgumentException(StringUtils.isNullOrWhiteSpace(message) ? "The value passed for 'name' is not valid." : message);

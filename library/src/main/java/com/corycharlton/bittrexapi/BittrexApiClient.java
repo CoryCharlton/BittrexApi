@@ -6,6 +6,7 @@ import com.corycharlton.bittrexapi.internal.NameValuePair;
 import com.corycharlton.bittrexapi.internal.gson.Gson;
 import com.corycharlton.bittrexapi.internal.util.Ensure;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
+import com.corycharlton.bittrexapi.response.CancelOrderResponse;
 import com.corycharlton.bittrexapi.response.GetBalanceResponse;
 import com.corycharlton.bittrexapi.response.GetBalancesResponse;
 import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
@@ -20,6 +21,8 @@ import com.corycharlton.bittrexapi.response.GetOrderHistoryResponse;
 import com.corycharlton.bittrexapi.response.GetOrderResponse;
 import com.corycharlton.bittrexapi.response.GetTickerResponse;
 import com.corycharlton.bittrexapi.response.GetWithdrawalHistoryResponse;
+import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
+import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -41,6 +44,7 @@ public class BittrexApiClient {
     public static final int DEFAULT_WRITE_TIMEOUT_MILLIS = 20 * 1000; // 20s
     public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
 
+    static final String URL_CANCELORDER = "https://bittrex.com/api/v1.1/market/cancel";
     static final String URL_GETBALANCE = "https://bittrex.com/api/v1.1/account/getbalance";
     static final String URL_GETBALANCES = "https://bittrex.com/api/v1.1/account/getbalances";
     static final String URL_GETCURRENCIES = "https://bittrex.com/api/v1.1/public/getcurrencies";
@@ -55,6 +59,8 @@ public class BittrexApiClient {
     static final String URL_GETORDERHISTORY = "https://bittrex.com/api/v1.1/account/getorderhistory";
     static final String URL_GETTICKER = "https://bittrex.com/api/v1.1/public/getticker";
     static final String URL_GETWITHDRAWALHISTORY = "https://bittrex.com/api/v1.1/account/getwithdrawalhistory";
+    static final String URL_PLACEBUYLIMITORDER = "https://bittrex.com/api/v1.1/market/buylimit";
+    static final String URL_PLACESELLLIMITORDER = "https://bittrex.com/api/v1.1/market/selllimit";
 
     private final Downloader _downloader;
     private final String _key;
@@ -116,6 +122,18 @@ public class BittrexApiClient {
         }
 
         return new Downloader.Request(requestUrl, requestHeaders);
+    }
+
+    public CancelOrderResponse cancelOrder(@NonNull UUID uuid) throws IOException {
+        Ensure.isNotNull("uuid", uuid);
+
+        final ArrayList<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new NameValuePair("uuid", uuid.toString()));
+
+        final Downloader.Request request = buildRequest(URL_CANCELORDER, parameters, true);
+        final String response = _downloader.execute(request).bodyString();
+
+        return Gson.fromJson(response, CancelOrderResponse.class);
     }
 
     public GetBalanceResponse getBalance(@NonNull String currency) throws IOException {
@@ -281,6 +299,43 @@ public class BittrexApiClient {
         final String response = _downloader.execute(request).bodyString();
 
         return Gson.fromJson(response, GetWithdrawalHistoryResponse.class);
+    }
+
+    public PlaceBuyLimitOrderResponse placeBuyLimitOrder(@NonNull String market, double quantity, double rate) throws IOException {
+        Ensure.isNotNullOrWhitespace("market", market);
+        Ensure.isTrue("quantity", quantity > 0.0);
+        Ensure.isTrue("rate", rate > 0.0);
+
+        final ArrayList<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new NameValuePair("market", market));
+        parameters.add(new NameValuePair("quantity", Double.toString(quantity)));
+        parameters.add(new NameValuePair("rate", Double.toString(rate)));
+
+        final Downloader.Request request = buildRequest(URL_PLACEBUYLIMITORDER, parameters, true);
+        final String response = _downloader.execute(request).bodyString();
+
+        return Gson.fromJson(response, PlaceBuyLimitOrderResponse.class);
+    }
+
+    /*
+    market 	required 	a string literal for the market (ex: BTC-LTC)
+    quantity 	required 	the amount to purchase
+    rate 	required 	the rate at which to place the order
+     */
+    public PlaceSellLimitOrderResponse placeSellLimitOrder(@NonNull String market, double quantity, double rate) throws IOException {
+        Ensure.isNotNullOrWhitespace("market", market);
+        Ensure.isTrue("quantity", quantity > 0.0);
+        Ensure.isTrue("rate", rate > 0.0);
+
+        final ArrayList<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new NameValuePair("market", market));
+        parameters.add(new NameValuePair("quantity", Double.toString(quantity)));
+        parameters.add(new NameValuePair("rate", Double.toString(rate)));
+
+        final Downloader.Request request = buildRequest(URL_PLACESELLLIMITORDER, parameters, true);
+        final String response = _downloader.execute(request).bodyString();
+
+        return Gson.fromJson(response, PlaceSellLimitOrderResponse.class);
     }
 
     public String signUrl(@NonNull String url) {

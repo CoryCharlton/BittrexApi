@@ -8,20 +8,9 @@ import android.util.Log;
 import com.corycharlton.bittrexapi.BittrexApiClient;
 import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
 import com.corycharlton.bittrexapi.demo.settings.ApplicationSettings;
-import com.corycharlton.bittrexapi.response.GetBalanceResponse;
-import com.corycharlton.bittrexapi.response.GetBalancesResponse;
-import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
-import com.corycharlton.bittrexapi.response.GetDepositAddressResponse;
-import com.corycharlton.bittrexapi.response.GetDepositHistoryResponse;
-import com.corycharlton.bittrexapi.response.GetMarketHistoryResponse;
-import com.corycharlton.bittrexapi.response.GetMarketSummariesResponse;
-import com.corycharlton.bittrexapi.response.GetMarketSummaryResponse;
-import com.corycharlton.bittrexapi.response.GetMarketsResponse;
-import com.corycharlton.bittrexapi.response.GetOrderBookResponse;
-import com.corycharlton.bittrexapi.response.GetOrderHistoryResponse;
-import com.corycharlton.bittrexapi.response.GetOrderResponse;
-import com.corycharlton.bittrexapi.response.GetTickerResponse;
-import com.corycharlton.bittrexapi.response.GetWithdrawalHistoryResponse;
+import com.corycharlton.bittrexapi.response.CancelOrderResponse;
+import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
+import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -41,7 +30,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             final BittrexApiClient client = new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret()).build();
 
-            GetWithdrawalHistoryResponse response14 = client.getWithdrawalHistory();
+            //PlaceBuyLimitOrderResponse response16 = client.placeBuyLimitOrder("BTC-SC", 1000, 0.00000150);
+
+            CancelOrderResponse response15 = client.cancelOrder(UUID.fromString("3d0b9f14-4452-4458-83ae-a1f426a1b1ce"));
 
             Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint...");
             /*
@@ -64,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
             GetWithdrawalHistoryResponse response14 = client.getWithdrawalHistory();
             GetWithdrawalHistoryResponse response13 = client.getWithdrawalHistory("BTC");
 
+            CancelOrderResponse response15 = client.cancelOrder(UUID.fromString("b45c12ab-eb10-418a-ba4a-4e85b8d7db28"));
+            PlaceSellLimitOrderResponse response15 = client.placeSellLimitOrder("BTC-SC", 1000, 0.00001930);
             */
         } catch (IOException e) {
             Log.e(BittrexApiLibraryInfo.TAG, e.toString(), e);
