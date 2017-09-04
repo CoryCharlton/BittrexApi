@@ -1,8 +1,6 @@
 package com.corycharlton.bittrexapi;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.corycharlton.bittrexapi.internal.NameValuePair;
 import com.corycharlton.bittrexapi.internal.gson.Gson;
@@ -37,10 +35,18 @@ import static com.corycharlton.bittrexapi.internal.util.Ensure.*;
 
 @SuppressWarnings("unused, WeakerAccess")
 public class BittrexApiClient {
+    //TODO: Add a logging interface
 
     public static final int DEFAULT_READ_TIMEOUT_MILLIS = 20 * 1000; // 20s
     public static final int DEFAULT_WRITE_TIMEOUT_MILLIS = 20 * 1000; // 20s
     public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
+
+    static final String URL_GETBALANCE = "https://bittrex.com/api/v1.1/account/getbalance";
+    static final String URL_GETBALANCES = "https://bittrex.com/api/v1.1/account/getbalances";
+    static final String URL_GETCURRENCIES = "https://bittrex.com/api/v1.1/public/getcurrencies";
+    static final String URL_GETDEPOSITADDRESS = "https://bittrex.com/api/v1.1/account/getdepositaddress";
+    static final String URL_GETDEPOSITHISTORY = "https://bittrex.com/api/v1.1/account/getdeposithistory";
+    static final String URL_GETMARKETHISTORY = "https://bittrex.com/api/v1.1/public/getmarkethistory";
 
     private final Downloader _downloader;
     private final String _key;
@@ -94,14 +100,14 @@ public class BittrexApiClient {
             }
         }
 
-        final ArrayList<NameValuePair> headers = new ArrayList<>();
-        final Uri uri = Uri.parse(urlStringBuilder.toString());
+        final ArrayList<NameValuePair> requestHeaders = new ArrayList<>();
+        final String requestUrl = urlStringBuilder.toString();
 
         if (requiresAuthenticaton) {
-            headers.add(new NameValuePair("apisign", signUrl(uri.toString())));
+            requestHeaders.add(new NameValuePair("apisign", signUrl(requestUrl)));
         }
 
-        return new Downloader.Request(uri, headers);
+        return new Downloader.Request(requestUrl, requestHeaders);
     }
 
     public GetBalanceResponse getBalance(@NonNull String currency) throws IOException {
@@ -110,39 +116,24 @@ public class BittrexApiClient {
         final ArrayList<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new NameValuePair("currency", currency));
 
-        final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/account/getbalance", parameters, true);
+        final Downloader.Request request = buildRequest(URL_GETBALANCE, parameters, true);
         final String response = _downloader.execute(request).bodyString();
-
-        Log.w(BittrexApiLibraryInfo.TAG, response);
 
         return Gson.fromJson(response, GetBalanceResponse.class);
     }
 
     public GetBalancesResponse getBalances() throws IOException {
-        final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/account/getbalances", true);
+        final Downloader.Request request = buildRequest(URL_GETBALANCES, true);
         final String response = _downloader.execute(request).bodyString();
-
-        Log.w(BittrexApiLibraryInfo.TAG, response);
 
         return Gson.fromJson(response, GetBalancesResponse.class);
     }
 
     public GetCurrenciesResponse getCurrencies() throws IOException {
-        final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/public/getcurrencies");
+        final Downloader.Request request = buildRequest(URL_GETCURRENCIES);
         final String response = _downloader.execute(request).bodyString();
-
-        Log.w(BittrexApiLibraryInfo.TAG, response);
 
         return Gson.fromJson(response, GetCurrenciesResponse.class);
-    }
-
-    public GetMarketsResponse getMarkets() throws IOException {
-        final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/public/getmarkets");
-        final String response = _downloader.execute(request).bodyString();
-
-        Log.w(BittrexApiLibraryInfo.TAG, response);
-
-        return Gson.fromJson(response, GetMarketsResponse.class);
     }
 
     public GetDepositAddressResponse getDepositAddress(@NonNull String currency) throws IOException {
@@ -151,10 +142,8 @@ public class BittrexApiClient {
         final ArrayList<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new NameValuePair("currency", currency));
 
-        final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/account/getdepositaddress", parameters, true);
+        final Downloader.Request request = buildRequest(URL_GETDEPOSITADDRESS, parameters, true);
         final String response = _downloader.execute(request).bodyString();
-
-        Log.w(BittrexApiLibraryInfo.TAG, response);
 
         return Gson.fromJson(response, GetDepositAddressResponse.class);
     }
@@ -170,10 +159,8 @@ public class BittrexApiClient {
             parameters.add(new NameValuePair("currency", currency));
         }
 
-        final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/account/getdeposithistory", parameters, true);
+        final Downloader.Request request = buildRequest(URL_GETDEPOSITHISTORY, parameters, true);
         final String response = _downloader.execute(request).bodyString();
-
-        Log.w(BittrexApiLibraryInfo.TAG, response);
 
         return Gson.fromJson(response, GetDepositHistoryResponse.class);
     }
@@ -184,19 +171,22 @@ public class BittrexApiClient {
         final ArrayList<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new NameValuePair("market", market));
 
-        final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/public/getmarkethistory", parameters);
+        final Downloader.Request request = buildRequest(URL_GETMARKETHISTORY, parameters);
         final String response = _downloader.execute(request).bodyString();
 
-        Log.w(BittrexApiLibraryInfo.TAG, response);
-
         return Gson.fromJson(response, GetMarketHistoryResponse.class);
+    }
+
+    public GetMarketsResponse getMarkets() throws IOException {
+        final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/public/getmarkets");
+        final String response = _downloader.execute(request).bodyString();
+
+        return Gson.fromJson(response, GetMarketsResponse.class);
     }
 
     public GetMarketSummariesResponse getMarketSummaries() throws IOException {
         final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/public/getmarketsummaries");
         final String response = _downloader.execute(request).bodyString();
-
-        Log.w(BittrexApiLibraryInfo.TAG, response);
 
         return Gson.fromJson(response, GetMarketSummariesResponse.class);
     }
@@ -210,8 +200,6 @@ public class BittrexApiClient {
         final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/public/getmarketsummary", parameters);
         final String response = _downloader.execute(request).bodyString();
 
-        Log.w(BittrexApiLibraryInfo.TAG, response);
-
         return Gson.fromJson(response, GetMarketSummaryResponse.class);
     }
 
@@ -223,8 +211,6 @@ public class BittrexApiClient {
 
         final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/account/getorder", parameters, true);
         final String response = _downloader.execute(request).bodyString();
-
-        Log.w(BittrexApiLibraryInfo.TAG, response);
 
         return Gson.fromJson(response, GetOrderResponse.class);
     }
@@ -239,8 +225,6 @@ public class BittrexApiClient {
 
         final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/public/getorderbook", parameters);
         final String response = _downloader.execute(request).bodyString();
-
-        Log.w(BittrexApiLibraryInfo.TAG, response);
 
         return Gson.fromJson(response, GetOrderBookResponse.class);
     }
@@ -259,8 +243,6 @@ public class BittrexApiClient {
         final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/account/getorderhistory", parameters, true);
         final String response = _downloader.execute(request).bodyString();
 
-        Log.w(BittrexApiLibraryInfo.TAG, response);
-
         return Gson.fromJson(response, GetOrderHistoryResponse.class);
     }
 
@@ -272,8 +254,6 @@ public class BittrexApiClient {
 
         final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/public/getticker", parameters);
         final String response = _downloader.execute(request).bodyString();
-
-        Log.w(BittrexApiLibraryInfo.TAG, response);
 
         return Gson.fromJson(response, GetTickerResponse.class);
     }
@@ -291,8 +271,6 @@ public class BittrexApiClient {
 
         final Downloader.Request request = buildRequest("https://bittrex.com/api/v1.1/account/getwithdrawalhistory", parameters, true);
         final String response = _downloader.execute(request).bodyString();
-
-        Log.w(BittrexApiLibraryInfo.TAG, response);
 
         return Gson.fromJson(response, GetWithdrawalHistoryResponse.class);
     }
@@ -342,6 +320,7 @@ public class BittrexApiClient {
             this.secret = secret;
         }
 
+        @NonNull
         public BittrexApiClient build() {
             if (downloader == null) {
                 this.downloader = new UrlConnectionDownloader();
@@ -350,9 +329,10 @@ public class BittrexApiClient {
             return new BittrexApiClient(this);
         }
 
+        @NonNull
         public Builder downloader(@NonNull Downloader downloader) {
-            isNotNull("_downloader", downloader, "Downloader must not be null.");
-            isValidState("_downloader", this.downloader == null, "Downloader already set.");
+            isNotNull("downloader", downloader, "Downloader must not be null.");
+            isValidState("downloader", this.downloader == null, "Downloader already set.");
 
             this.downloader = downloader;
 

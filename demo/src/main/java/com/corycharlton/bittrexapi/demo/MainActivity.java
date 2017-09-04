@@ -39,30 +39,32 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         try {
-            final BittrexApiClient client =  new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret()).build();
+            final BittrexApiClient client = new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret()).build();
 
-            GetOrderResponse response17 = client.getOrder(UUID.fromString("360f7031-e358-4bd0-9efc-2558b66d6157"));
+            GetMarketHistoryResponse response2 = client.getMarketHistory("BTC-LTC");
 
-
+            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint...");
             /*
+            GetOrderResponse response17 = client.getOrder(UUID.fromString("360f7031-e358-4bd0-9efc-2558b66d6157"));
             GetOrderHistoryResponse response15 = client.getOrderHistory("BTC-SC");
             GetOrderHistoryResponse response16 = client.getOrderHistory();
             GetDepositHistoryResponse response11 = client.getDepositHistory("BTC");
-            GetDepositHistoryResponse response12 = client.getDepositHistory();
             GetWithdrawalHistoryResponse response13 = client.getWithdrawalHistory("BTC");
             GetWithdrawalHistoryResponse response14 = client.getWithdrawalHistory();
-            GetDepositHistoryResponse response11 = client.getDepositHistory("BTC");
-            GetDepositHistoryResponse response12 = client.getDepositHistory();
-            GetDepositAddressResponse response10 = client.getDepositAddress("BTC");
-            GetBalanceResponse response9 = client.getBalance("BTC");
-            GetBalancesResponse response8 = client.getBalances();
-            GetCurrenciesResponse response1 = client.getCurrencies();
-            GetMarketHistoryResponse response2 = client.getMarketHistory("BTC-LTC");
             GetMarketsResponse response3 = client.getMarkets();
             GetMarketSummariesResponse response4 = client.getMarketSummaries();
             GetMarketSummaryResponse response5 = client.getMarketSummary("BTC-LTC");
             GetOrderBookResponse response6 = client.getOrderBook("BTC-LTC");
             GetTickerResponse response7 = client.getTicker("BTC-LTC");
+
+            GetBalanceResponse response9 = client.getBalance("BTC");
+            GetBalancesResponse response8 = client.getBalances();
+            GetCurrenciesResponse response1 = client.getCurrencies();
+            GetDepositAddressResponse response10 = client.getDepositAddress("BTC");
+            GetDepositHistoryResponse response12 = client.getDepositHistory();
+            GetDepositHistoryResponse response11 = client.getDepositHistory("BTC");
+            GetMarketHistoryResponse response2 = client.getMarketHistory("BTC-LTC");
+
             */
         } catch (IOException e) {
             Log.e(BittrexApiLibraryInfo.TAG, e.toString(), e);

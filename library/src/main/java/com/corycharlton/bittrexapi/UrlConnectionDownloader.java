@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.constants.HttpHeader;
 import com.corycharlton.bittrexapi.internal.util.Ensure;
-import com.corycharlton.bittrexapi.internal.util.StringUtils;
 import com.corycharlton.bittrexapi.internal.NameValuePair;
 
 import java.io.BufferedReader;
@@ -19,7 +18,7 @@ public class UrlConnectionDownloader implements Downloader {
     @Override public Response execute(@NonNull Request request) throws IOException {
         Ensure.isNotNull("request", request);
 
-        HttpURLConnection connection = openConnection(request.uri());
+        HttpURLConnection connection = openConnection(Uri.parse(request.url()));
         connection.setUseCaches(false);
 
         connection.addRequestProperty(HttpHeader.Accept, "application/json");

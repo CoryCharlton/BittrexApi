@@ -1,6 +1,5 @@
 package com.corycharlton.bittrexapi;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.util.Ensure;
@@ -15,17 +14,19 @@ public interface Downloader {
 
     final class Request {
         private final ArrayList<NameValuePair> _headers;
-        private final Uri _uri;
+        private final String _url;
 
-        Request(@NonNull Uri uri) {
-            this(uri, null);
+        /*
+        Request(@NonNull String url) {
+            this(url, null);
         }
+        */
 
-        Request(@NonNull Uri uri, ArrayList<NameValuePair> headers) {
-            Ensure.isNotNull("uri", uri);
+        Request(@NonNull String url, ArrayList<NameValuePair> headers) {
+            Ensure.isNotNullOrWhitespace("url", url);
 
             _headers = headers != null ? headers : new ArrayList<NameValuePair>();
-            _uri = uri;
+            _url = url;
         }
 
         @NonNull
@@ -34,8 +35,8 @@ public interface Downloader {
         }
 
         @NonNull
-        public Uri uri() {
-            return _uri;
+        public String url() {
+            return _url;
         }
 
         @Override
