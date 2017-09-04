@@ -36,6 +36,14 @@ public class Market {
         return _isActive;
     }
 
+    public boolean isSponsored() {
+        return _isSponsored;
+    }
+
+    public String logoUrl() {
+        return _logoUrl;
+    }
+
     public String marketCurrency() {
         return _marketCurrency;
     }
@@ -50,5 +58,9 @@ public class Market {
 
     public double minTradeSize() {
         return _minTradeSize;
+    }
+
+    public String notice() {
+        return _notice;
     }
 }
