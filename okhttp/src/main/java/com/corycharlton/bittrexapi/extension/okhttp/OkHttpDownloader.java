@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.CacheControl;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 
 /**
  * A {@link Downloader} implementation that uses a {@link OkHttpClient} to execute requests
@@ -40,11 +41,19 @@ public class OkHttpDownloader implements Downloader {
         final okhttp3.Response response = client.newCall(okhttpRequestBuilder.build()).execute();
 
         int responseCode = response.code();
+        final ResponseBody responseBody = response.body();
         if (responseCode < 200 || responseCode >= 300) {
-            response.body().close();
-            throw new ResponseException(responseCode + " " + response.message(), responseCode);
+            if (responseBody != null) {
+                responseBody.close();
+            }
+
+            throw new ResponseException(responseCode + ": " + response.message(), responseCode);
         }
 
-        return new Response(response.body().string(), responseCode);
+        if (responseBody == null) {
+            throw new ResponseException(responseCode + ": ResponseBody was null" , responseCode);
+        }
+
+        return new Response(responseBody.string(), responseCode);
     }
 }

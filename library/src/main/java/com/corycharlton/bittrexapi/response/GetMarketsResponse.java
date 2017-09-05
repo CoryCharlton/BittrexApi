@@ -4,6 +4,7 @@ import com.corycharlton.bittrexapi.model.Market;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("EmptyMethod")
 public class GetMarketsResponse extends Response<ArrayList<Market>> {
     private GetMarketsResponse() {} // Cannot be instantiated
 

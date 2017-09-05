@@ -4,6 +4,7 @@ import com.corycharlton.bittrexapi.model.Withdrawal;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("EmptyMethod")
 public class GetWithdrawalHistoryResponse extends Response<ArrayList<Withdrawal>> {
     private GetWithdrawalHistoryResponse() {} // Cannot be instantiated
 
