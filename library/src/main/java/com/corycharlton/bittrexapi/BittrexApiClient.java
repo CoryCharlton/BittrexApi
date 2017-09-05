@@ -519,29 +519,30 @@ public class BittrexApiClient {
 
     public static final class Builder {
 
-        private Downloader downloader;
-        private final String key;
-        private final String secret;
+        Downloader downloader;
+        String key;
+        String secret;
 
         /**
          * A builder used to validate and build a {@link BittrexApiClient}
-         * @param key The api key used for requests
-         * @param secret The api secret used for requests
          */
-        public Builder(@NonNull String key, @NonNull String secret) {
-            isNotNullOrWhitespace("_key", key);
-            isNotNullOrWhitespace("_secret", secret);
-
-            this.key = key;
-            this.secret = secret;
+        public Builder() {
+            // Empty constructor
         }
 
         /**
          * Generates the {@link BittrexApiClient}
-         * @return A {@link BittrexApiClient}}
+         * @return A {@link BittrexApiClient}
          */
         @NonNull
         public BittrexApiClient build() {
+            // TODO: Do I need to require key and secret?
+            // If I don't then users could make public calls
+            // Need to do a little more verification to ensure
+            // the class will handle this case correctly
+            isValidState("key", !StringUtils.isNullOrWhiteSpace(key), "An api key must be set");
+            isValidState("secret", !StringUtils.isNullOrWhiteSpace(secret), "An api secret must be set");
+
             if (downloader == null) {
                 this.downloader = new UrlConnectionDownloader();
             }
@@ -560,6 +561,34 @@ public class BittrexApiClient {
             isValidState("downloader", this.downloader == null, "Downloader already set.");
 
             this.downloader = downloader;
+
+            return this;
+        }
+
+        /**
+         * Set the api key
+         * @param key The Bittrex api key
+         * @return This {@link Builder} instance for method chaining
+         */
+        @NonNull
+        public Builder key(@NonNull String key) {
+            isNotNullOrWhitespace("key", key);
+
+            this.key = key;
+
+            return this;
+        }
+
+        /**
+         * Set the api secret
+         * @param secret The Bittrex api secret
+         * @return This {@link Builder} instance for method chaining
+         */
+        @NonNull
+        public Builder secret(@NonNull String secret) {
+            isNotNullOrWhitespace("secret", secret);
+
+            this.secret = secret;
 
             return this;
         }

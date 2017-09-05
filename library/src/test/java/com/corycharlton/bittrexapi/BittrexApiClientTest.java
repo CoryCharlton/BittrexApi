@@ -45,7 +45,11 @@ public class BittrexApiClientTest {
 
     @NonNull
     private static BittrexApiClient getClient() {
-        return new BittrexApiClient.Builder(key, secret).downloader(new MockDownloader()).build();
+        return new BittrexApiClient.Builder()
+                .downloader(new MockDownloader())
+                .key(key)
+                .secret(secret)
+                .build();
     }
 
     public static class When_cancelOrder_is_called {

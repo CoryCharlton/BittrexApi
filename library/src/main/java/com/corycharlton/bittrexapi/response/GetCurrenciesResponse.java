@@ -4,6 +4,7 @@ import com.corycharlton.bittrexapi.model.Currency;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("EmptyMethod")
 public class GetCurrenciesResponse extends Response<ArrayList<Currency>> {
     private GetCurrenciesResponse() {} // Cannot be instantiated
 

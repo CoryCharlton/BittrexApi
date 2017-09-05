@@ -30,15 +30,17 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         try {
-            final BittrexApiClient client = new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret())
+            final BittrexApiClient client = new BittrexApiClient.Builder()
                     .downloader(new OkHttpDownloader())
+                    .key(ApplicationSettings.instance().getKey())
+                    .secret(ApplicationSettings.instance().getSecret())
                     .build();
 
-            GetOpenOrdersResponse response11 = client.getOpenOrders();
+            CancelOrderResponse response11 = client.cancelOrder(UUID.randomUUID());
 
-            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint..." + response11.toString());
+            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint... " + response11.toString());
+
             /*
-
             GetBalanceResponse response1 = client.getBalance("BTC");
             GetBalancesResponse response2 = client.getBalances();
             GetCurrenciesResponse response3 = client.getCurrencies();
@@ -49,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
             GetMarketsResponse response8 = client.getMarkets();
             GetMarketSummariesResponse response9 = client.getMarketSummaries();
             GetMarketSummaryResponse response10 = client.getMarketSummary("BTC-LTC");
-
-
-
+            GetOpenOrdersResponse response11 = client.getOpenOrders();
             GetOrderResponse response12 = client.getOrder(UUID.fromString("360f7031-e358-4bd0-9efc-2558b66d6157"));
             GetOrderBookResponse response13 = client.getOrderBook("BTC-LTC");
             GetOrderHistoryResponse response14 = client.getOrderHistory();
