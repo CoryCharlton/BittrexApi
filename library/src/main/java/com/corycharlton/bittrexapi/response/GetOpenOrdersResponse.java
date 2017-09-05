@@ -6,4 +6,9 @@ import java.util.ArrayList;
 
 public class GetOpenOrdersResponse extends Response<ArrayList<OpenOrder>> {
     private GetOpenOrdersResponse() {} // Cannot be instantiated
+
+    @Override
+    public ArrayList<OpenOrder> result() {
+        return super.result();
+    }
 }

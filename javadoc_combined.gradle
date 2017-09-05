@@ -20,11 +20,12 @@ class CombinedJavadocPlugin implements Plugin<Project> {
             encoding = "UTF-8"
           }
           exclude "**/BuildConfig.java"
+          exclude "**/BittrexApiLibraryInfo.java"
           exclude "**/R.java"
           exclude "**/internal/**"
           destinationDir project.file("$project.buildDir/docs/javadoc")
           doLast {
-              project.delete("${project.rootDir}/docs/reference");
+              project.delete "${project.rootDir}/docs/reference";
               project.copy {
                 from "${project.buildDir}/docs/javadoc"
                 into "${project.rootDir}/docs/reference"

@@ -14,14 +14,23 @@ abstract class Response<T> {
 
     }
 
+    /**
+     * @return true if the api call was successful; false if not
+     */
     public boolean success() {
         return _success;
     }
 
+    /**
+     * @return A message from the api call
+     */
     public String message() {
         return _message;
     }
 
+    /**
+     * @return The result from the api call
+     */
     public T result() {
         return _result;
     }

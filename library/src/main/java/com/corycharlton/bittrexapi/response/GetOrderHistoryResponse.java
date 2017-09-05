@@ -6,4 +6,9 @@ import java.util.ArrayList;
 
 public class GetOrderHistoryResponse extends Response<ArrayList<OrderHistory>> {
     private GetOrderHistoryResponse() {} // Cannot be instantiated
+
+    @Override
+    public ArrayList<OrderHistory> result() {
+        return super.result();
+    }
 }
