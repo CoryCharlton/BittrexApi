@@ -1,6 +1,6 @@
 package com.corycharlton.bittrexapi.response;
 
-import com.corycharlton.bittrexapi.data.MarketHistory;
+import com.corycharlton.bittrexapi.model.MarketHistory;
 
 import java.util.ArrayList;
 

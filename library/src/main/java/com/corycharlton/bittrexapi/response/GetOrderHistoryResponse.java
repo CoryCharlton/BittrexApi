@@ -1,6 +1,6 @@
 package com.corycharlton.bittrexapi.response;
 
-import com.corycharlton.bittrexapi.data.OrderHistory;
+import com.corycharlton.bittrexapi.model.OrderHistory;
 
 import java.util.ArrayList;
 

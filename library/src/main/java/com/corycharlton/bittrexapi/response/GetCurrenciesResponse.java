@@ -1,6 +1,6 @@
 package com.corycharlton.bittrexapi.response;
 
-import com.corycharlton.bittrexapi.data.Currency;
+import com.corycharlton.bittrexapi.model.Currency;
 
 import java.util.ArrayList;
 

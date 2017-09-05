@@ -103,10 +103,17 @@ final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
 
     @Override
     public Date read(JsonReader in) throws IOException {
+        if (in.peek() == JsonToken.NULL) {
+            in.nextNull();
+            return null;
+        }
+
         if (in.peek() != JsonToken.STRING) {
             throw new JsonParseException("The date should be a string value");
         }
+
         Date date = deserializeToDate(in.nextString());
+
         if (dateType == Date.class) {
             return date;
         } else if (dateType == Timestamp.class) {

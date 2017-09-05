@@ -1,4 +1,4 @@
-package com.corycharlton.bittrexapi.data;
+package com.corycharlton.bittrexapi.model;
 
 import com.google.gson.annotations.SerializedName;
 

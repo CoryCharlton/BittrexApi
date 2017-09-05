@@ -1,6 +1,6 @@
 package com.corycharlton.bittrexapi.response;
 
-import com.corycharlton.bittrexapi.data.Deposit;
+import com.corycharlton.bittrexapi.model.Deposit;
 
 import java.util.ArrayList;
 

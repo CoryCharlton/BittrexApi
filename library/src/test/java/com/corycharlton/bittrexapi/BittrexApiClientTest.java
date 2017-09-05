@@ -2,20 +2,21 @@ package com.corycharlton.bittrexapi;
 
 import android.support.annotation.NonNull;
 
-import com.corycharlton.bittrexapi.data.Balance;
-import com.corycharlton.bittrexapi.data.Currency;
-import com.corycharlton.bittrexapi.data.Deposit;
-import com.corycharlton.bittrexapi.data.DepositAddress;
-import com.corycharlton.bittrexapi.data.Market;
-import com.corycharlton.bittrexapi.data.MarketHistory;
-import com.corycharlton.bittrexapi.data.MarketSummary;
-import com.corycharlton.bittrexapi.data.Order;
-import com.corycharlton.bittrexapi.data.OrderBook;
-import com.corycharlton.bittrexapi.data.OrderBookEntry;
-import com.corycharlton.bittrexapi.data.OrderHistory;
-import com.corycharlton.bittrexapi.data.OrderId;
-import com.corycharlton.bittrexapi.data.Ticker;
-import com.corycharlton.bittrexapi.data.Withdrawal;
+import com.corycharlton.bittrexapi.model.Balance;
+import com.corycharlton.bittrexapi.model.Currency;
+import com.corycharlton.bittrexapi.model.Deposit;
+import com.corycharlton.bittrexapi.model.DepositAddress;
+import com.corycharlton.bittrexapi.model.Market;
+import com.corycharlton.bittrexapi.model.MarketHistory;
+import com.corycharlton.bittrexapi.model.MarketSummary;
+import com.corycharlton.bittrexapi.model.OpenOrder;
+import com.corycharlton.bittrexapi.model.Order;
+import com.corycharlton.bittrexapi.model.OrderBook;
+import com.corycharlton.bittrexapi.model.OrderBookEntry;
+import com.corycharlton.bittrexapi.model.OrderHistory;
+import com.corycharlton.bittrexapi.model.OrderId;
+import com.corycharlton.bittrexapi.model.Ticker;
+import com.corycharlton.bittrexapi.model.Withdrawal;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
 import com.corycharlton.bittrexapi.response.*;
 
@@ -356,6 +357,41 @@ public class BittrexApiClientTest {
         }
     }
 
+    public static class When_getOpenOrders_is_called {
+        @Test()
+        public void it_should_parse_response() throws IOException {
+            final GetOpenOrdersResponse response = getClient().getOpenOrders();
+
+            assertNotNull(response);
+            assertTrue(response.success());
+
+            final ArrayList<OpenOrder> result = response.result();
+
+            assertNotNull(result);
+            assertEquals(2, result.size());
+
+            final OpenOrder item = result.get(0);
+
+            assertNull(item.closed());
+            assertFalse(item.cancelInitiated());
+            assertEquals(0.00000000, item.commissionPaid(), 0.00000001);
+            assertEquals("NONE", item.condition());
+            assertEquals(0.00000000, item.conditionTarget(), 0.00000001);
+            assertEquals("BTC-FLO", item.exchange());
+            assertFalse(item.immediateOrCancel());
+            assertFalse(item.isConditional());
+            assertEquals(0.00010000, item.limit(), 0.00000001);
+            assertDateParsed(item.opened());
+            assertEquals("LIMIT_SELL", item.orderType());
+            assertEquals("57aac6c3-197f-45e0-af29-cd650cc5dea8", item.orderUuid().toString());
+            assertEquals(0.00000000, item.price(), 0.00000001);
+            assertEquals(0.00000000, item.pricePerUnit(), 0.00000001);
+            assertEquals(1500.00000000, item.quantity(), 0.00000001);
+            assertEquals(1500.00000000, item.quantityRemaining(), 0.00000001);
+            assertNull(item.uuid());
+        }
+    }
+
     public static class When_getOrder_is_called {
         @Test()
         public void it_should_parse_response() throws IOException {
@@ -657,6 +693,8 @@ public class BittrexApiClientTest {
                     return handleGetMarketSummaries();
                 case BittrexApiClient.URL_GETMARKETSUMMARY:
                     return handleGetMarketSummary();
+                case BittrexApiClient.URL_GETOPENORDERS:
+                    return handleGetOpenOrders();
                 case BittrexApiClient.URL_GETORDER:
                     return handleGetOrder();
                 case BittrexApiClient.URL_GETORDERBOOK:
@@ -899,6 +937,52 @@ public class BittrexApiClientTest {
                     "\t\t\t\"OpenSellOrders\": 5647,\n" +
                     "\t\t\t\"PrevDay\": 0.01745500,\n" +
                     "\t\t\t\"Created\": \"2014-02-13T00:00:00\"\n" +
+                    "\t\t}\n" +
+                    "\t]\n" +
+                    "}\n", 200);
+        }
+
+        @NonNull
+        private Response handleGetOpenOrders() {
+            return new Response("{\n" +
+                    "\t\"success\": true,\n" +
+                    "\t\"message\": \"\",\n" +
+                    "\t\"result\": [{\n" +
+                    "\t\t\t\"Uuid\": null,\n" +
+                    "\t\t\t\"OrderUuid\": \"57aac6c3-197f-45e0-af29-cd650cc5dea8\",\n" +
+                    "\t\t\t\"Exchange\": \"BTC-FLO\",\n" +
+                    "\t\t\t\"OrderType\": \"LIMIT_SELL\",\n" +
+                    "\t\t\t\"Quantity\": 1500.00000000,\n" +
+                    "\t\t\t\"QuantityRemaining\": 1500.00000000,\n" +
+                    "\t\t\t\"Limit\": 0.00010000,\n" +
+                    "\t\t\t\"CommissionPaid\": 0.00000000,\n" +
+                    "\t\t\t\"Price\": 0.00000000,\n" +
+                    "\t\t\t\"PricePerUnit\": null,\n" +
+                    "\t\t\t\"Opened\": \"2017-08-28T23:37:44.56\",\n" +
+                    "\t\t\t\"Closed\": null,\n" +
+                    "\t\t\t\"CancelInitiated\": false,\n" +
+                    "\t\t\t\"ImmediateOrCancel\": false,\n" +
+                    "\t\t\t\"IsConditional\": false,\n" +
+                    "\t\t\t\"Condition\": \"NONE\",\n" +
+                    "\t\t\t\"ConditionTarget\": null\n" +
+                    "\t\t}, {\n" +
+                    "\t\t\t\"Uuid\": null,\n" +
+                    "\t\t\t\"OrderUuid\": \"57aac6c3-197f-45e0-af29-cd650cc5dea8\",\n" +
+                    "\t\t\t\"Exchange\": \"BTC-LSK\",\n" +
+                    "\t\t\t\"OrderType\": \"LIMIT_SELL\",\n" +
+                    "\t\t\t\"Quantity\": 10.00000000,\n" +
+                    "\t\t\t\"QuantityRemaining\": 10.00000000,\n" +
+                    "\t\t\t\"Limit\": 0.00146214,\n" +
+                    "\t\t\t\"CommissionPaid\": 0.00000000,\n" +
+                    "\t\t\t\"Price\": 0.00000000,\n" +
+                    "\t\t\t\"PricePerUnit\": null,\n" +
+                    "\t\t\t\"Opened\": \"2017-09-04T22:33:13.543\",\n" +
+                    "\t\t\t\"Closed\": null,\n" +
+                    "\t\t\t\"CancelInitiated\": false,\n" +
+                    "\t\t\t\"ImmediateOrCancel\": false,\n" +
+                    "\t\t\t\"IsConditional\": false,\n" +
+                    "\t\t\t\"Condition\": \"NONE\",\n" +
+                    "\t\t\t\"ConditionTarget\": null\n" +
                     "\t\t}\n" +
                     "\t]\n" +
                     "}\n", 200);

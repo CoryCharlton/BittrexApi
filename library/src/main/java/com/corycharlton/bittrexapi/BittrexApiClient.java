@@ -17,6 +17,7 @@ import com.corycharlton.bittrexapi.response.GetMarketHistoryResponse;
 import com.corycharlton.bittrexapi.response.GetMarketSummariesResponse;
 import com.corycharlton.bittrexapi.response.GetMarketSummaryResponse;
 import com.corycharlton.bittrexapi.response.GetMarketsResponse;
+import com.corycharlton.bittrexapi.response.GetOpenOrdersResponse;
 import com.corycharlton.bittrexapi.response.GetOrderBookResponse;
 import com.corycharlton.bittrexapi.response.GetOrderHistoryResponse;
 import com.corycharlton.bittrexapi.response.GetOrderResponse;
@@ -55,6 +56,7 @@ public class BittrexApiClient {
     static final String URL_GETMARKETS = "https://bittrex.com/api/v1.1/public/getmarkets";
     static final String URL_GETMARKETSUMMARIES = "https://bittrex.com/api/v1.1/public/getmarketsummaries";
     static final String URL_GETMARKETSUMMARY = "https://bittrex.com/api/v1.1/public/getmarketsummary";
+    static final String URL_GETOPENORDERS = "https://bittrex.com/api/v1.1/market/getopenorders";
     static final String URL_GETORDER = "https://bittrex.com/api/v1.1/account/getorder";
     static final String URL_GETORDERBOOK = "https://bittrex.com/api/v1.1/public/getorderbook";
     static final String URL_GETORDERHISTORY = "https://bittrex.com/api/v1.1/account/getorderhistory";
@@ -300,6 +302,36 @@ public class BittrexApiClient {
         final String response = _downloader.execute(request).bodyString();
 
         return Gson.fromJson(response, GetMarketSummaryResponse.class);
+    }
+
+    /**
+     * Get all orders that you currently have opened.
+     * @return A list of open orders
+     * @throws IOException If there is a network error
+     * @see GetOpenOrdersResponse
+     */
+    public GetOpenOrdersResponse getOpenOrders() throws IOException {
+        return getOpenOrders(null);
+    }
+
+    /**
+     * Get all orders that you currently have opened.
+     * @param market An optional string literal for the market (ie. BTC-LTC)
+     * @return A list of open orders
+     * @throws IOException If there is a network error
+     * @see GetOpenOrdersResponse
+     */
+    public GetOpenOrdersResponse getOpenOrders(String market) throws IOException {
+        final ArrayList<NameValuePair> parameters = new ArrayList<>();
+
+        if (!StringUtils.isNullOrWhiteSpace(market)) {
+            parameters.add(new NameValuePair("market", market));
+        }
+
+        final Downloader.Request request = buildRequest(URL_GETOPENORDERS, parameters, true);
+        final String response = _downloader.execute(request).bodyString();
+
+        return Gson.fromJson(response, GetOpenOrdersResponse.class);
     }
 
     /**

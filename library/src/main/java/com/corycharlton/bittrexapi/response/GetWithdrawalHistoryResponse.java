@@ -1,6 +1,6 @@
 package com.corycharlton.bittrexapi.response;
 
-import com.corycharlton.bittrexapi.data.Withdrawal;
+import com.corycharlton.bittrexapi.model.Withdrawal;
 
 import java.util.ArrayList;
 
