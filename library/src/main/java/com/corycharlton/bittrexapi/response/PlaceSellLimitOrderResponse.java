@@ -4,4 +4,9 @@ import com.corycharlton.bittrexapi.model.OrderId;
 
 public class PlaceSellLimitOrderResponse extends Response<OrderId> {
     private PlaceSellLimitOrderResponse() {} // Cannot be instantiated
+
+    @Override
+    public OrderId result() {
+        return super.result();
+    }
 }

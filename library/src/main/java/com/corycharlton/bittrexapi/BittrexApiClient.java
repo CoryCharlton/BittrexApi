@@ -38,6 +38,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 import static com.corycharlton.bittrexapi.internal.util.Ensure.*;
 
+/**
+ * An implementation of the Bittrex Api
+ */
 @SuppressWarnings("unused, WeakerAccess")
 public class BittrexApiClient {
     //TODO: Add a logging interface
@@ -130,9 +133,8 @@ public class BittrexApiClient {
     /**
      * Used to cancel a buy or sell order.
      * @param uuid uuid of buy or sell order
-     * @return The status of the cancel request
+     * @return A {@link CancelOrderResponse} that represents the status of the cancel request
      * @throws IOException If there is a network error
-     * @see CancelOrderResponse
      */
     public CancelOrderResponse cancelOrder(@NonNull UUID uuid) throws IOException {
         Ensure.isNotNull("uuid", uuid);
@@ -548,7 +550,7 @@ public class BittrexApiClient {
         }
 
         /**
-         * Sets the Downloader implementation used to execute api calls.
+         * Sets the {@link Downloader} implementation used to execute api calls.
          * @param downloader The {@link Downloader} implementation used to execute api calls. A downloader must not already be set
          * @return This {@link Builder} instance for method chaining
          */

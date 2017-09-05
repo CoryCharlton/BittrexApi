@@ -1,4 +1,4 @@
-# Bittrex Api for Android
+# Android Bittrex Api 
 
 #### Build Status
 master | dev

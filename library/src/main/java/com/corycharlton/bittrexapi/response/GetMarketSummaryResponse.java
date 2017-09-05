@@ -8,4 +8,9 @@ import java.util.ArrayList;
 // Consider implementing a type adapter like this: https://stackoverflow.com/questions/7668507/gson-handle-object-or-array
 public class GetMarketSummaryResponse extends Response<ArrayList<MarketSummary>> {
     private GetMarketSummaryResponse() {} // Cannot be instantiated
+
+    @Override
+    public ArrayList<MarketSummary> result() {
+        return super.result();
+    }
 }

@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
+apply from: '../constants.gradle'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion project.ext.compileSdkVersion
+    buildToolsVersion project.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.corycharlton.bittrexapi.demo"
-        minSdkVersion 14
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+        versionCode project.ext.versionCode
+        versionName project.ext.versionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -29,12 +30,13 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 
-    compile 'com.android.support:appcompat-v7:26.0.1'
+    compile 'com.android.support:appcompat-v7:' + supportLibraryVersion
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:support-annotations:26.0.1'
+    compile 'com.android.support:support-annotations:' + supportLibraryVersion
 
     // http://square.github.io/okhttp/
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
 
     compile project(':library')
+    compile project(':okhttp')
 }

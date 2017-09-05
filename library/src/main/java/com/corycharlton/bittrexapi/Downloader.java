@@ -9,20 +9,32 @@ import com.corycharlton.bittrexapi.internal.util.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Responsible for making network calls to the Bittrex Api
+ */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public interface Downloader {
+
+    /**
+     * Executes the request
+     * @param request The api request being executed
+     * @return A {@link Response} with the results of the request
+     * @throws IOException If there is a network error
+     */
     Response execute(@NonNull Request request) throws IOException;
 
+    /**
+     * Represents a HTTP request
+     */
     final class Request {
         private final ArrayList<NameValuePair> _headers;
         private final String _url;
 
-        /*
-        Request(@NonNull String url) {
-            this(url, null);
-        }
-        */
-
+        /**
+         * Construct a new {@link Request}
+         * @param url The url for the request
+         * @param headers A list of HTTP headers associated with the request
+         */
         Request(@NonNull String url, ArrayList<NameValuePair> headers) {
             Ensure.isNotNullOrWhitespace("url", url);
 
@@ -30,11 +42,19 @@ public interface Downloader {
             _url = url;
         }
 
+        /**
+         * A list of HTTP headers associated with the request
+         * @return A list of HTTP headers associated with the request
+         */
         @NonNull
         public ArrayList<NameValuePair> headers() {
             return _headers;
         }
 
+        /**
+         * The url for the request
+         * @return The url for the request
+         */
         @NonNull
         public String url() {
             return _url;
@@ -60,10 +80,18 @@ public interface Downloader {
         }
     }
 
+    /**
+     * Represents a HTTP response
+     */
     final class Response {
         private final String _bodyString;
         private final int _responseCode;
 
+        /**
+         * Construct a new {@link Response}
+         * @param bodyString The contents of the response
+         * @param responseCode The HTTP status code of the response
+         */
         public Response(@NonNull String bodyString, int responseCode) {
             Ensure.isNotNull("bodyString", bodyString);
 
@@ -71,10 +99,18 @@ public interface Downloader {
             _responseCode = responseCode;
         }
 
+        /**
+         * The contents of the response
+         * @return The contents of the response
+         */
         public String bodyString() {
             return _bodyString;
         }
 
+        /**
+         * The HTTP status code of the response
+         * @return The HTTP status code of the response
+         */
         public int responseCode() {
             return _responseCode;
         }
@@ -85,6 +121,9 @@ public interface Downloader {
         }
     }
 
+    /**
+     * An {@link IOException} that includes the HTTP status code
+     */
     class ResponseException extends IOException {
         final int responseCode;
 

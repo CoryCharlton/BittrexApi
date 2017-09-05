@@ -8,6 +8,7 @@ import android.util.Log;
 import com.corycharlton.bittrexapi.BittrexApiClient;
 import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
 import com.corycharlton.bittrexapi.demo.settings.ApplicationSettings;
+import com.corycharlton.bittrexapi.extension.okhttp.OkHttpDownloader;
 import com.corycharlton.bittrexapi.response.CancelOrderResponse;
 import com.corycharlton.bittrexapi.response.GetOpenOrdersResponse;
 import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
@@ -29,11 +30,13 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         try {
-            final BittrexApiClient client = new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret()).build();
+            final BittrexApiClient client = new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret())
+                    .downloader(new OkHttpDownloader())
+                    .build();
 
             GetOpenOrdersResponse response11 = client.getOpenOrders();
 
-            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint...");
+            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint..." + response11.toString());
             /*
 
             GetBalanceResponse response1 = client.getBalance("BTC");
