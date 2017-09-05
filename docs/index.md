@@ -3,18 +3,16 @@ layout: default
 title: Home
 ---
 
-Description....
-
-## News ##
-
-News...
+The Android Bittrex Api library is an implementation of the Bittrex apis.
 
 ## Documentation ##
 
-Link to javadoc goes here...
+* The [class reference][] documents the Android Bittrex Api library classes.
+
+[class reference]: https://corycharlton.github.io/Android-Bittrex-Api/doc/reference
 
 ## Source code ##
 
-* Source code can be found in the [Bittrex Api project][] on GitHub.
+* Source code can be found in the [Android Bittrex Api project][] on GitHub.
 
-[Bittrex Api project]: https://github.com/CoryCharlton/Android-Bittrex-Api
+[Android Bittrex Api project]: https://github.com/CoryCharlton/Android-Bittrex-Api

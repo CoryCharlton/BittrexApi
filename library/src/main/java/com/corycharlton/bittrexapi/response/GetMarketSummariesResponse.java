@@ -6,4 +6,9 @@ import java.util.ArrayList;
 
 public class GetMarketSummariesResponse extends Response<ArrayList<MarketSummary>> {
     private GetMarketSummariesResponse() {} // Cannot be instantiated
+
+    @Override
+    public ArrayList<MarketSummary> result() {
+        return super.result();
+    }
 }

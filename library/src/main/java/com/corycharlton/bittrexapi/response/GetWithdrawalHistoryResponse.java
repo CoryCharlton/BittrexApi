@@ -6,4 +6,9 @@ import java.util.ArrayList;
 
 public class GetWithdrawalHistoryResponse extends Response<ArrayList<Withdrawal>> {
     private GetWithdrawalHistoryResponse() {} // Cannot be instantiated
+
+    @Override
+    public ArrayList<Withdrawal> result() {
+        return super.result();
+    }
 }

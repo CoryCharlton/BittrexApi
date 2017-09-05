@@ -6,4 +6,9 @@ import java.util.ArrayList;
 
 public class GetCurrenciesResponse extends Response<ArrayList<Currency>> {
     private GetCurrenciesResponse() {} // Cannot be instantiated
+
+    @Override
+    public ArrayList<Currency> result() {
+        return super.result();
+    }
 }

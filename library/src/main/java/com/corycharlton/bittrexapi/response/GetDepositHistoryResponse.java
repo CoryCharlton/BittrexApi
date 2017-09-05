@@ -6,4 +6,9 @@ import java.util.ArrayList;
 
 public class GetDepositHistoryResponse extends Response<ArrayList<Deposit>> {
     private GetDepositHistoryResponse() {} // Cannot be instantiated
+
+    @Override
+    public ArrayList<Deposit> result() {
+        return super.result();
+    }
 }
