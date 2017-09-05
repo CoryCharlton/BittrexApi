@@ -30,15 +30,17 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         try {
-            final BittrexApiClient client = new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret())
+            final BittrexApiClient client = new BittrexApiClient.Builder()
                     .downloader(new OkHttpDownloader())
+                    .key(ApplicationSettings.instance().getKey())
+                    .secret(ApplicationSettings.instance().getSecret())
                     .build();
 
             CancelOrderResponse response11 = client.cancelOrder(UUID.randomUUID());
 
             Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint... " + response11.toString());
-            /*
 
+            /*
             GetBalanceResponse response1 = client.getBalance("BTC");
             GetBalancesResponse response2 = client.getBalances();
             GetCurrenciesResponse response3 = client.getCurrencies();
