@@ -1,0 +1,20 @@
+android.libraryVariants.all { variant ->
+    def name = variant.buildType.name
+    if (name != "release") {
+        return; // Skip non-release builds.
+    }
+    task("generateJavadoc", type: Javadoc) {
+        description = "Generates Javadoc for the ${javadocTitle}."
+        title = "Android Bittrex Api library ${javadocTitle}"
+        source = variant.javaCompile.source
+        classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
+        options {
+            links "http://docs.oracle.com/javase/7/docs/api/"
+            linksOffline "https://developer.android.com/reference", "${android.sdkDirectory}/docs/reference"
+            encoding = "UTF-8"
+        }
+        exclude "**/BuildConfig.java"
+        exclude "**/R.java"
+        exclude "**/internal/**"
+    }
+}

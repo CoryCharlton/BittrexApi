@@ -38,6 +38,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 import static com.corycharlton.bittrexapi.internal.util.Ensure.*;
 
+/**
+ * An implementation of the Bittrex Api
+ */
 @SuppressWarnings("unused, WeakerAccess")
 public class BittrexApiClient {
     //TODO: Add a logging interface
