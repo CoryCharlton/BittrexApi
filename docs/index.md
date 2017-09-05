@@ -9,7 +9,7 @@ The Android Bittrex Api library is an implementation of the Bittrex apis.
 
 * The [class reference][] documents the Android Bittrex Api library classes.
 
-[class reference]: https://corycharlton.github.io/Android-Bittrex-Api/doc/reference
+[class reference]: https://corycharlton.github.io/Android-Bittrex-Api/reference
 
 ## Source code ##
 
