@@ -149,7 +149,7 @@ public class BittrexApiClient {
     /**
      * Used to retrieve the balance from your account for a specific currency.
      * @param currency string literal for the currency (ex: LTC)
-     * @return The balance for the requested currency
+     * @return A {@link GetBalanceResponse} that represents the balance for the requested currency
      * @throws IOException If there is a network error
      * @see GetBalanceResponse
      */
@@ -167,7 +167,7 @@ public class BittrexApiClient {
 
     /**
      * Used to retrieve all balances from your account.
-     * @return A list of balances
+     * @return A {@link GetBalanceResponse} that represents the list of balances
      * @throws IOException If there is a network error
      * @see GetBalancesResponse
      */
@@ -180,9 +180,8 @@ public class BittrexApiClient {
 
     /**
      * Used to get all supported currencies at Bittrex along with other meta data.
-     * @return A list of currencies
+     * @return A {@link GetCurrenciesResponse} that represents the list of currencies
      * @throws IOException If there is a network error
-     * @see GetCurrenciesResponse
      */
     public GetCurrenciesResponse getCurrencies() throws IOException {
         final Downloader.Request request = buildRequest(URL_GETCURRENCIES);
@@ -194,9 +193,8 @@ public class BittrexApiClient {
     /**
      * Used to retrieve or generate an address for a specific currency. If one does not exist, the call will fail and return ADDRESS_GENERATING until one is available.
      * @param currency A string literal for the currency (ie. BTC)
-     * @return A deposit address for the requested currency
+     * @return A {@link GetDepositAddressResponse} that represents the deposit address for the requested currency
      * @throws IOException If there is a network error
-     * @see GetDepositAddressResponse
      */
     public GetDepositAddressResponse getDepositAddress(@NonNull String currency) throws IOException {
         Ensure.isNotNullOrWhitespace("currency", currency);
@@ -212,9 +210,8 @@ public class BittrexApiClient {
 
     /**
      * Used to retrieve your deposit history.
-     * @return The deposit history
+     * @return A {@link GetDepositHistoryResponse} that represents your deposit history for all currencies
      * @throws IOException If there is a network error
-     * @see GetDepositHistoryResponse
      */
     public GetDepositHistoryResponse getDepositHistory() throws IOException {
         return getDepositHistory(null);
@@ -223,9 +220,8 @@ public class BittrexApiClient {
     /**
      * Used to retrieve your deposit history.
      * @param currency An optional string literal for the currency (ie. BTC). If omitted, will return for all currencies
-     * @return The deposit history for the requested currency
+     * @return A {@link GetDepositHistoryResponse} that represents your deposit history for the requested currency
      * @throws IOException If there is a network error
-     * @see GetDepositHistoryResponse
      */
     public GetDepositHistoryResponse getDepositHistory(String currency) throws IOException {
         final ArrayList<NameValuePair> parameters = new ArrayList<>();
@@ -243,9 +239,8 @@ public class BittrexApiClient {
     /**
      * Used to retrieve the latest trades that have occurred for a specific market.
      * @param market A string literal for the market (ex: BTC-LTC)
-     * @return The latest trades that have occurred for the requested market
+     * @return A {@link GetMarketHistoryResponse} that represents the latest trades that have occurred for the requested market
      * @throws IOException If there is a network error
-     * @see GetMarketHistoryResponse
      */
     public GetMarketHistoryResponse getMarketHistory(@NonNull String market) throws IOException {
         Ensure.isNotNullOrWhitespace("market", market);
@@ -261,9 +256,8 @@ public class BittrexApiClient {
 
     /**
      * Used to get the open and available trading markets at Bittrex along with other meta data.
-     * @return The available trading markets
+     * @return A {@link GetMarketsResponse} that represents the available trading markets
      * @throws IOException If there is a network error
-     * @see GetMarketsResponse
      */
     public GetMarketsResponse getMarkets() throws IOException {
         final Downloader.Request request = buildRequest(URL_GETMARKETS);
@@ -274,9 +268,8 @@ public class BittrexApiClient {
 
     /**
      * Used to get the last 24 hour summary of all active exchanges.
-     * @return The last 24 hour summary of all active exchanges
+     * @return A {@link GetMarketSummariesResponse} that represents the last 24 hour summary of all active exchanges
      * @throws IOException If there is a network error
-     * @see GetMarketSummariesResponse
      */
     public GetMarketSummariesResponse getMarketSummaries() throws IOException {
         final Downloader.Request request = buildRequest(URL_GETMARKETSUMMARIES);
@@ -288,9 +281,8 @@ public class BittrexApiClient {
     /**
      * Used to get the last 24 hour summary for a specific exchange.
      * @param market A string literal for the market (ex: BTC-LTC)
-     * @return The last 24 hour summary for the requested exchange
+     * @return A {@link GetMarketSummaryResponse} that represents the last 24 hour summary for the requested exchange
      * @throws IOException If there is a network error
-     * @see GetMarketSummaryResponse
      */
     public GetMarketSummaryResponse getMarketSummary(@NonNull String market) throws IOException {
         Ensure.isNotNullOrWhitespace("market", market);
@@ -306,9 +298,8 @@ public class BittrexApiClient {
 
     /**
      * Get all orders that you currently have opened.
-     * @return A list of open orders
+     * @return A {@link GetOpenOrdersResponse} that represents the list of open orders
      * @throws IOException If there is a network error
-     * @see GetOpenOrdersResponse
      */
     public GetOpenOrdersResponse getOpenOrders() throws IOException {
         return getOpenOrders(null);
@@ -317,9 +308,8 @@ public class BittrexApiClient {
     /**
      * Get all orders that you currently have opened.
      * @param market An optional string literal for the market (ie. BTC-LTC)
-     * @return A list of open orders
+     * @return A {@link GetOpenOrdersResponse} that represents the list of open orders
      * @throws IOException If there is a network error
-     * @see GetOpenOrdersResponse
      */
     public GetOpenOrdersResponse getOpenOrders(String market) throws IOException {
         final ArrayList<NameValuePair> parameters = new ArrayList<>();
@@ -337,9 +327,8 @@ public class BittrexApiClient {
     /**
      * Used to retrieve a single order by uuid.
      * @param uuid The uuid of the buy or sell order
-     * @return The requested order details
+     * @return A {@link GetOrderResponse} that represents the requested order details
      * @throws IOException If there is a network error
-     * @see GetOrderResponse
      */
     public GetOrderResponse getOrder(@NonNull UUID uuid) throws IOException {
         Ensure.isNotNull("uuid", uuid);
@@ -356,9 +345,8 @@ public class BittrexApiClient {
     /**
      * Used to retrieve the order book for a given market.
      * @param market A string literal for the market (ex: BTC-LTC
-     * @return The order book for the requested market
+     * @return A {@link GetOrderBookResponse} that represents the order book for the requested market
      * @throws IOException If there is a network error
-     * @see GetOrderBookResponse
      */
     // TODO: Expose the 'type' parameter?
     public GetOrderBookResponse getOrderBook(@NonNull String market) throws IOException {
@@ -376,9 +364,8 @@ public class BittrexApiClient {
 
     /**
      * Used to retrieve your order history for all markets.
-     * @return Your order history
+     * @return A {@link GetOrderHistoryResponse} that represents your order history
      * @throws IOException If there is a network error
-     * @see GetOrderHistoryResponse
      */
     public GetOrderHistoryResponse getOrderHistory() throws IOException {
         return getOrderHistory(null);
@@ -387,9 +374,8 @@ public class BittrexApiClient {
     /**
      * Used to retrieve your order history.
      * @param market An optional string literal for the market (ie. BTC-LTC). If omitted, will return for all markets
-     * @return Your order history
+     * @return A {@link GetOrderHistoryResponse} that represents your order history
      * @throws IOException If there is a network error
-     * @see GetOrderHistoryResponse
      */
     public GetOrderHistoryResponse getOrderHistory(String market) throws IOException {
         final ArrayList<NameValuePair> parameters = new ArrayList<>();
@@ -407,9 +393,8 @@ public class BittrexApiClient {
     /**
      * Used to get the current tick values for a market.
      * @param market A string literal for the market (ex: BTC-LTC)
-     * @return The current tick values for the requested market
+     * @return A {@link GetTickerResponse} that represents the current tick values for the requested market
      * @throws IOException If there is a network error
-     * @see GetTickerResponse
      */
     public GetTickerResponse getTicker(@NonNull String market) throws IOException {
         Ensure.isNotNullOrWhitespace("market", market);
@@ -425,9 +410,8 @@ public class BittrexApiClient {
 
     /**
      * Used to retrieve your withdrawal history.
-     * @return Your withdrawal history
+     * @return A {@link GetWithdrawalHistoryResponse} that represents your withdrawal history
      * @throws IOException If there is a network error
-     * @see GetWithdrawalHistoryResponse
      */
     public GetWithdrawalHistoryResponse getWithdrawalHistory() throws IOException {
         return getWithdrawalHistory(null);
@@ -436,9 +420,8 @@ public class BittrexApiClient {
     /**
      * Used to retrieve your withdrawal history.
      * @param currency An optional string literal for the currency (ie. BTC). If omitted, will return for all currencies
-     * @return Your withdrawal history
+     * @return A {@link GetWithdrawalHistoryResponse} that represents your withdrawal history
      * @throws IOException If there is a network error
-     * @see GetWithdrawalHistoryResponse
      */
     public GetWithdrawalHistoryResponse getWithdrawalHistory(String currency) throws IOException {
         final ArrayList<NameValuePair> parameters = new ArrayList<>();
@@ -458,9 +441,8 @@ public class BittrexApiClient {
      * @param market A string literal for the market (ex: BTC-LTC)
      * @param quantity The amount to purchase
      * @param rate The rate at which to place the order
-     * @return The uuid for the buy
+     * @return A {@link PlaceBuyLimitOrderResponse}
      * @throws IOException If there is a network error
-     * @see PlaceBuyLimitOrderResponse
      */
     public PlaceBuyLimitOrderResponse placeBuyLimitOrder(@NonNull String market, double quantity, double rate) throws IOException {
         Ensure.isNotNullOrWhitespace("market", market);
@@ -483,9 +465,8 @@ public class BittrexApiClient {
      * @param market A string literal for the market (ex: BTC-LTC)
      * @param quantity The amount to purchase
      * @param rate The rate at which to place the order
-     * @return The uuid for the sell
+     * @return A {@link PlaceSellLimitOrderResponse}
      * @throws IOException If there is a network error
-     * @see PlaceSellLimitOrderResponse
      */
     public PlaceSellLimitOrderResponse placeSellLimitOrder(@NonNull String market, double quantity, double rate) throws IOException {
         Ensure.isNotNullOrWhitespace("market", market);
@@ -541,10 +522,9 @@ public class BittrexApiClient {
         private final String secret;
 
         /**
-         * A builder used to validate and build a BittrexApiClient
+         * A builder used to validate and build a {@link BittrexApiClient}
          * @param key The api key used for requests
          * @param secret The api secret used for requests
-         * @see BittrexApiClient
          */
         public Builder(@NonNull String key, @NonNull String secret) {
             isNotNullOrWhitespace("_key", key);
@@ -555,9 +535,8 @@ public class BittrexApiClient {
         }
 
         /**
-         * Generates the BittrexApiClient
-         * @return A BittrexApiClient
-         * @see BittrexApiClient
+         * Generates the {@link BittrexApiClient}
+         * @return A {@link BittrexApiClient}}
          */
         @NonNull
         public BittrexApiClient build() {
@@ -570,8 +549,8 @@ public class BittrexApiClient {
 
         /**
          * Sets the Downloader implementation used to execute api calls.
-         * @param downloader The Downloader implementation used to execute api calls. A downloader must not already be set
-         * @return This BittrexApiClient.Builder instance for method chaining
+         * @param downloader The {@link Downloader} implementation used to execute api calls. A downloader must not already be set
+         * @return This {@link Builder} instance for method chaining
          */
         @NonNull
         public Builder downloader(@NonNull Downloader downloader) {
