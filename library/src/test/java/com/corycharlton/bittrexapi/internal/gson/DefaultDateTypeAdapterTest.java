@@ -16,6 +16,8 @@
 
 package com.corycharlton.bittrexapi.internal.gson;
 
+import android.annotation.SuppressLint;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -83,6 +85,7 @@ public class DefaultDateTypeAdapterTest {
         assertParsed("1969-12-31T23:00:00-01", adapter);
     }
 
+    @SuppressLint("SimpleDateFormat")
     @Test
     public void testDatePattern() throws Exception {
         String pattern = "yyyy-MM-dd";

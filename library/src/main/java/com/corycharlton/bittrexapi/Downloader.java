@@ -1,30 +1,33 @@
 package com.corycharlton.bittrexapi;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.util.Ensure;
 import com.corycharlton.bittrexapi.internal.NameValuePair;
+import com.corycharlton.bittrexapi.internal.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public interface Downloader {
     Response execute(@NonNull Request request) throws IOException;
 
     final class Request {
         private final ArrayList<NameValuePair> _headers;
-        private final Uri _uri;
+        private final String _url;
 
-        Request(@NonNull Uri uri) {
-            this(uri, null);
+        /*
+        Request(@NonNull String url) {
+            this(url, null);
         }
+        */
 
-        Request(@NonNull Uri uri, ArrayList<NameValuePair> headers) {
-            Ensure.isNotNull("uri", uri);
+        Request(@NonNull String url, ArrayList<NameValuePair> headers) {
+            Ensure.isNotNullOrWhitespace("url", url);
 
             _headers = headers != null ? headers : new ArrayList<NameValuePair>();
-            _uri = uri;
+            _url = url;
         }
 
         @NonNull
@@ -33,28 +36,52 @@ public interface Downloader {
         }
 
         @NonNull
-        public Uri uri() {
-            return _uri;
+        public String url() {
+            return _url;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder stringBuilder = new StringBuilder("Url: " + _url);
+
+            for (NameValuePair header : _headers) {
+                if (header != null && !StringUtils.isNullOrWhiteSpace(header.name())) {
+                    stringBuilder.append(" - ");
+                    stringBuilder.append(header.name());
+
+                    if (!StringUtils.isNullOrWhiteSpace(header.value())) {
+                        stringBuilder.append(" = ");
+                        stringBuilder.append(header.value());
+                    }
+                }
+            }
+
+            return stringBuilder.toString();
         }
     }
 
     final class Response {
+        private final String _bodyString;
         private final int _responseCode;
-        private final String _responseString;
 
-        public Response(@NonNull String responseString, int responseCode) {
-            Ensure.isNotNull("responseString", responseString);
+        public Response(@NonNull String bodyString, int responseCode) {
+            Ensure.isNotNull("bodyString", bodyString);
 
+            _bodyString = bodyString;
             _responseCode = responseCode;
-            _responseString = responseString;
         }
 
-        public int getResponseCode() {
+        public String bodyString() {
+            return _bodyString;
+        }
+
+        public int responseCode() {
             return _responseCode;
         }
 
-        public String getResponseString() {
-            return _responseString;
+        @Override
+        public String toString() {
+            return responseCode() + ": " + bodyString();
         }
     }
 

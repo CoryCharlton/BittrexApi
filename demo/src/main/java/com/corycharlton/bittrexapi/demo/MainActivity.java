@@ -8,16 +8,13 @@ import android.util.Log;
 import com.corycharlton.bittrexapi.BittrexApiClient;
 import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
 import com.corycharlton.bittrexapi.demo.settings.ApplicationSettings;
-import com.corycharlton.bittrexapi.response.GetBalancesResponse;
-import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
-import com.corycharlton.bittrexapi.response.GetMarketHistoryResponse;
-import com.corycharlton.bittrexapi.response.GetMarketSummariesResponse;
-import com.corycharlton.bittrexapi.response.GetMarketSummaryResponse;
-import com.corycharlton.bittrexapi.response.GetMarketsResponse;
-import com.corycharlton.bittrexapi.response.GetOrderBookResponse;
-import com.corycharlton.bittrexapi.response.GetTickerResponse;
+import com.corycharlton.bittrexapi.response.CancelOrderResponse;
+import com.corycharlton.bittrexapi.response.GetOpenOrdersResponse;
+import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
+import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,18 +29,37 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         try {
-            final BittrexApiClient client =  new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret()).build();
+            final BittrexApiClient client = new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret()).build();
 
+            GetOpenOrdersResponse response11 = client.getOpenOrders();
 
-            GetBalancesResponse response8 = client.getBalances();
+            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint...");
             /*
-            GetCurrenciesResponse response1 = client.getCurrencies();
-            GetMarketHistoryResponse response2 = client.getMarketHistory("BTC-LTC");
-            GetMarketsResponse response3 = client.getMarkets();
-            GetMarketSummariesResponse response4 = client.getMarketSummaries();
-            GetMarketSummaryResponse response5 = client.getMarketSummary("BTC-LTC");
-            GetOrderBookResponse response6 = client.getOrderBook("BTC-LTC");
-            GetTickerResponse response7 = client.getTicker("BTC-LTC");
+
+            GetBalanceResponse response1 = client.getBalance("BTC");
+            GetBalancesResponse response2 = client.getBalances();
+            GetCurrenciesResponse response3 = client.getCurrencies();
+            GetDepositAddressResponse response4 = client.getDepositAddress("BTC");
+            GetDepositHistoryResponse response5 = client.getDepositHistory();
+            GetDepositHistoryResponse response6 = client.getDepositHistory("BTC");
+            GetMarketHistoryResponse response7 = client.getMarketHistory("BTC-LTC");
+            GetMarketsResponse response8 = client.getMarkets();
+            GetMarketSummariesResponse response9 = client.getMarketSummaries();
+            GetMarketSummaryResponse response10 = client.getMarketSummary("BTC-LTC");
+
+
+
+            GetOrderResponse response12 = client.getOrder(UUID.fromString("360f7031-e358-4bd0-9efc-2558b66d6157"));
+            GetOrderBookResponse response13 = client.getOrderBook("BTC-LTC");
+            GetOrderHistoryResponse response14 = client.getOrderHistory();
+            GetOrderHistoryResponse response15 = client.getOrderHistory("BTC-SC");
+            GetTickerResponse response16 = client.getTicker("BTC-LTC");
+            GetWithdrawalHistoryResponse response17 = client.getWithdrawalHistory();
+            GetWithdrawalHistoryResponse response18 = client.getWithdrawalHistory("BTC");
+
+            CancelOrderResponse response19 = client.cancelOrder(UUID.fromString("b45c12ab-eb10-418a-ba4a-4e85b8d7db28"));
+            PlaceBuyLimitOrderResponse response20 = client.placeBuyLimitOrder("BTC-SC", 1000, 0.00000150);
+            PlaceSellLimitOrderResponse response21 = client.placeSellLimitOrder("BTC-SC", 1000, 0.00001930);
             */
         } catch (IOException e) {
             Log.e(BittrexApiLibraryInfo.TAG, e.toString(), e);

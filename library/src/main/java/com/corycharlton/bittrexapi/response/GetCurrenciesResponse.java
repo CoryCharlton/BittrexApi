@@ -1,9 +1,9 @@
 package com.corycharlton.bittrexapi.response;
 
-import com.corycharlton.bittrexapi.data.Currency;
+import com.corycharlton.bittrexapi.model.Currency;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public class GetCurrenciesResponse extends Response<List<Currency>> {
+public class GetCurrenciesResponse extends Response<ArrayList<Currency>> {
     private GetCurrenciesResponse() {} // Cannot be instantiated
 }

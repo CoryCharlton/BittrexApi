@@ -15,51 +15,51 @@ public class BittrexApiClient_BuilderTest {
     // only level of nested classed. It looks like JUnit5 supports this with the
     // @Nested attribute
 
-    private static final String key = "12345";
-    private static final String secret = "54321";
+    private static final String _key = "12345";
+    private static final String _secret = "54321";
 
     public static class When_constructor_is_called {
 
         @Test()
         public void it_should_not_throw_exception_if_key_and_secret_are_valid() {
-            new BittrexApiClient.Builder(key, secret);
+            new BittrexApiClient.Builder(_key, _secret);
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void it_should_throw_exception_if_key_is_empty() {
-            new BittrexApiClient.Builder(StringUtils.EMPTY, secret);
+            new BittrexApiClient.Builder(StringUtils.EMPTY, _secret);
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void it_should_throw_exception_if_key_is_null() {
-            new BittrexApiClient.Builder(null, secret);
+            new BittrexApiClient.Builder(null, _secret);
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void it_should_throw_exception_if_key_is_whitespace() {
-            new BittrexApiClient.Builder(" ", secret);
+            new BittrexApiClient.Builder(" ", _secret);
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void it_should_throw_exception_if_secret_is_empty() {
-            new BittrexApiClient.Builder(key, StringUtils.EMPTY);
+            new BittrexApiClient.Builder(_key, StringUtils.EMPTY);
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void it_should_throw_exception_if_secret_is_null() {
-            new BittrexApiClient.Builder(key, null);
+            new BittrexApiClient.Builder(_key, null);
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void it_should_throw_exception_if_secret_is_whitespace() {
-            new BittrexApiClient.Builder(key, " ");
+            new BittrexApiClient.Builder(_key, " ");
         }
     }
 
     public static class When_downloader_is_called {
         @Test()
         public void it_should_not_throw_exception_if_downloader_is_valid() {
-            final BittrexApiClient.Builder builder = new BittrexApiClient.Builder(key, secret);
+            final BittrexApiClient.Builder builder = new BittrexApiClient.Builder(_key, _secret);
             builder.downloader(new UrlConnectionDownloader());
 
             Assert.assertNotNull(builder.build());
@@ -67,7 +67,7 @@ public class BittrexApiClient_BuilderTest {
 
         @Test(expected = IllegalArgumentException.class)
         public void it_should_throw_exception_if_downloader_is_null() {
-            new BittrexApiClient.Builder(key, secret).downloader(null);
+            new BittrexApiClient.Builder(_key, _secret).downloader(null);
         }
     }
 }

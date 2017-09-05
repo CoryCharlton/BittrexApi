@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.constants.HttpHeader;
 import com.corycharlton.bittrexapi.internal.util.Ensure;
-import com.corycharlton.bittrexapi.internal.util.StringUtils;
 import com.corycharlton.bittrexapi.internal.NameValuePair;
 
 import java.io.BufferedReader;
@@ -16,10 +15,11 @@ import java.net.URL;
 
 public class UrlConnectionDownloader implements Downloader {
 
-    @Override public Response execute(@NonNull Request request) throws IOException {
+    @Override
+    public Response execute(@NonNull Request request) throws IOException {
         Ensure.isNotNull("request", request);
 
-        HttpURLConnection connection = openConnection(request.uri());
+        final HttpURLConnection connection = openConnection(Uri.parse(request.url()));
         connection.setUseCaches(false);
 
         connection.addRequestProperty(HttpHeader.Accept, "application/json");
@@ -47,10 +47,13 @@ public class UrlConnectionDownloader implements Downloader {
         return new Response(stringBuilder.toString(), responseCode);
     }
 
+    @NonNull
     private HttpURLConnection openConnection(Uri path) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(path.toString()).openConnection();
+        final HttpURLConnection connection = (HttpURLConnection) new URL(path.toString()).openConnection();
+
         connection.setConnectTimeout(BittrexApiClient.DEFAULT_CONNECT_TIMEOUT_MILLIS);
         connection.setReadTimeout(BittrexApiClient.DEFAULT_READ_TIMEOUT_MILLIS);
+
         return connection;
     }
 

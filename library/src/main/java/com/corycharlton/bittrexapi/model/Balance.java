@@ -1,4 +1,4 @@
-package com.corycharlton.bittrexapi.data;
+package com.corycharlton.bittrexapi.model;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -22,7 +22,7 @@ public class Balance {
 
     private Balance() {} // Cannot be instantiated
 
-    public double get_available() {
+    public double available() {
         return _available;
     }
 

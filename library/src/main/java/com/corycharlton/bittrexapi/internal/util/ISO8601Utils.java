@@ -15,7 +15,7 @@ import java.util.*;
 //Date parsing code from Jackson databind ISO8601Utils.java
 // https://github.com/FasterXML/jackson-databind/blob/master/src/main/java/com/fasterxml/jackson/databind/util/ISO8601Utils.java
 // Original Source: https://raw.githubusercontent.com/google/gson/master/gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public final class ISO8601Utils
 {
     /**
@@ -66,6 +66,7 @@ public final class ISO8601Utils
      * @param tz timezone to use for the formatting (UTC will produce 'Z')
      * @return the date formatted as yyyy-MM-ddThh:mm:ss[.sss][Z|[+-]hh:mm]
      */
+    @SuppressWarnings("SameParameterValue")
     public static String format(Date date, boolean millis, TimeZone tz) {
         Calendar calendar = new GregorianCalendar(tz, Locale.US);
         calendar.setTime(date);
@@ -123,7 +124,7 @@ public final class ISO8601Utils
      * @throws ParseException if the date is not in the appropriate format
      */
     public static Date parse(String date, ParsePosition pos) throws ParseException {
-        Exception fail = null;
+        Exception fail;
         try {
             int offset = pos.getIndex();
 
@@ -206,7 +207,7 @@ public final class ISO8601Utils
                 timezoneIndicator = date.charAt(offset);
             }
 
-            TimeZone timezone = null;
+            TimeZone timezone;
 
             if (timezoneIndicator == 'Z') {
                 timezone = TIMEZONE_UTC;
@@ -263,11 +264,7 @@ public final class ISO8601Utils
             return calendar.getTime();
             // If we get a ParseException it'll already have the right message/offset.
             // Other exception types can convert here.
-        } catch (IndexOutOfBoundsException e) {
-            fail = e;
-        } catch (NumberFormatException e) {
-            fail = e;
-        } catch (IllegalArgumentException e) {
+        } catch (IndexOutOfBoundsException | IllegalArgumentException e) {
             fail = e;
         }
         String input = (date == null) ? null : ('"' + date + "'");

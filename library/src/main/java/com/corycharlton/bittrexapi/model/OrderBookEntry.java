@@ -1,16 +1,16 @@
-package com.corycharlton.bittrexapi.data;
+package com.corycharlton.bittrexapi.model;
 
 import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings("unused")
-public class Order {
+public class OrderBookEntry {
 
     // TODO: Calculate total cost here?
 
     @SerializedName("Quantity") private double _quantity;
     @SerializedName("Rate") private double _rate;
 
-    private Order() {} // Cannot be instantiated
+    private OrderBookEntry() {} // Cannot be instantiated
 
     public double quantity() {
         return _quantity;

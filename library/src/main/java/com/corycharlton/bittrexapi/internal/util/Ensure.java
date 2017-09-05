@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 // Ported over from https://github.com/CoryCharlton/CCSWE.Core
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "SameParameterValue"})
 public final class Ensure {
 
     private Ensure() {} // Cannot instantiate
@@ -34,6 +34,14 @@ public final class Ensure {
 
     public static void isNotNullOrWhitespace(@NonNull String name, @Nullable String value, @Nullable String message) {
         isValid(name, !StringUtils.isNullOrWhiteSpace(value), message, ExceptionType.IllegalArgumentException);
+    }
+
+    public static void isTrue(@NonNull String name, boolean expression) {
+        isTrue(name, expression, null);
+    }
+
+    public static void isTrue(@NonNull String name, boolean expression, @Nullable String message) {
+        isValid(name, expression, message, ExceptionType.IllegalArgumentException);
     }
 
     private static void isValid(@NonNull String name, boolean expression, @Nullable String message, @NonNull ExceptionType exceptionType) {
