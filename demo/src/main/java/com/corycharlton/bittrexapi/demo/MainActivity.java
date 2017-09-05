@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             final BittrexApiClient client = new BittrexApiClient.Builder(ApplicationSettings.instance().getKey(), ApplicationSettings.instance().getSecret()).build();
 
-            //PlaceBuyLimitOrderResponse response16 = client.placeBuyLimitOrder("BTC-SC", 1000, 0.00000150);
-
             CancelOrderResponse response15 = client.cancelOrder(UUID.fromString("3d0b9f14-4452-4458-83ae-a1f426a1b1ce"));
 
             Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint...");
@@ -56,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             GetWithdrawalHistoryResponse response13 = client.getWithdrawalHistory("BTC");
 
             CancelOrderResponse response15 = client.cancelOrder(UUID.fromString("b45c12ab-eb10-418a-ba4a-4e85b8d7db28"));
+            PlaceBuyLimitOrderResponse response16 = client.placeBuyLimitOrder("BTC-SC", 1000, 0.00000150);
             PlaceSellLimitOrderResponse response15 = client.placeSellLimitOrder("BTC-SC", 1000, 0.00001930);
             */
         } catch (IOException e) {

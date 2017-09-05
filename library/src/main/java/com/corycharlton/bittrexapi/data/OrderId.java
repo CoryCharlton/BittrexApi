@@ -2,7 +2,6 @@ package com.corycharlton.bittrexapi.data;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
 import java.util.UUID;
 
 @SuppressWarnings("unused")

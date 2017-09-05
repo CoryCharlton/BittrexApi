@@ -17,6 +17,8 @@
 // Original Source: https://raw.githubusercontent.com/google/gson/master/gson/src/main/java/com/google/gson/DefaultDateTypeAdapter.java
 package com.corycharlton.bittrexapi.internal.gson;
 
+import android.annotation.SuppressLint;
+
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -43,7 +45,7 @@ import com.google.gson.stream.JsonWriter;
  */
 
 // Original source: https://raw.githubusercontent.com/google/gson/master/gson/src/main/java/com/google/gson/DefaultDateTypeAdapter.java
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"unused", "WeakerAccess"})
 final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
 
     private static final String TAG = DefaultDateTypeAdapter.class.getSimpleName();
@@ -58,6 +60,7 @@ final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
                 DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT));
     }
 
+    @SuppressLint("SimpleDateFormat")
     DefaultDateTypeAdapter(Class<? extends Date> dateType, String datePattern) {
         this(dateType, new SimpleDateFormat(datePattern, Locale.US), new SimpleDateFormat(datePattern));
     }
@@ -72,6 +75,7 @@ final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
                 DateFormat.getDateTimeInstance(dateStyle, timeStyle));
     }
 
+    @SuppressLint("SimpleDateFormat")
     public DefaultDateTypeAdapter(Class<? extends Date> dateType, int dateStyle, int timeStyle) {
         this(dateType,
                 DateFormat.getDateTimeInstance(dateStyle, timeStyle, Locale.US),

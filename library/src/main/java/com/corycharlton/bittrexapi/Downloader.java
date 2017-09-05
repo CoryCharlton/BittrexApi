@@ -4,11 +4,12 @@ import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.util.Ensure;
 import com.corycharlton.bittrexapi.internal.NameValuePair;
+import com.corycharlton.bittrexapi.internal.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public interface Downloader {
     Response execute(@NonNull Request request) throws IOException;
 
@@ -41,9 +42,21 @@ public interface Downloader {
 
         @Override
         public String toString() {
-            // TODO: Implement for convenience
-            return super.toString();
-            //return responseCode() + ": " + bodyString();
+            final StringBuilder stringBuilder = new StringBuilder("Url: " + _url);
+
+            for (NameValuePair header : _headers) {
+                if (header != null && !StringUtils.isNullOrWhiteSpace(header.name())) {
+                    stringBuilder.append(" - ");
+                    stringBuilder.append(header.name());
+
+                    if (!StringUtils.isNullOrWhiteSpace(header.value())) {
+                        stringBuilder.append(" = ");
+                        stringBuilder.append(header.value());
+                    }
+                }
+            }
+
+            return stringBuilder.toString();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.corycharlton.bittrexapi;
 
+@SuppressWarnings("unused")
 public final class BittrexApiLibraryInfo {
 
     public static final String TAG = "BittrexApi";

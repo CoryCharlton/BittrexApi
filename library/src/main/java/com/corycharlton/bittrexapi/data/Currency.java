@@ -10,7 +10,7 @@ public class Currency {
     @SerializedName("Currency") private String _currency;
     @SerializedName("CurrencyLong") private String _currencyLong;
     @SerializedName("IsActive") private boolean _isActive;
-    // Is this an int
+    // Is this an int?
     @SerializedName("MinConfirmation") private double _minConfirmation;
     // Not sure what this type is
     @SerializedName("Notice") private String _notice;

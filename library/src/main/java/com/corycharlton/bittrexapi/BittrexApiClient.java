@@ -3,6 +3,7 @@ package com.corycharlton.bittrexapi;
 import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.NameValuePair;
+import com.corycharlton.bittrexapi.internal.constants.HttpHeader;
 import com.corycharlton.bittrexapi.internal.gson.Gson;
 import com.corycharlton.bittrexapi.internal.util.Ensure;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
@@ -84,7 +85,7 @@ public class BittrexApiClient {
         return buildRequest(url, parameters, false);
     }
 
-    private Downloader.Request buildRequest(@NonNull String url, ArrayList<NameValuePair> parameters, boolean requiresAuthenticaton) {
+    private Downloader.Request buildRequest(@NonNull String url, ArrayList<NameValuePair> parameters, boolean requiresAuthentication) {
         if (parameters == null) {
             parameters = new ArrayList<>();
         }
@@ -92,7 +93,7 @@ public class BittrexApiClient {
         boolean firstParameterAdded = url.contains("?");
         final StringBuilder urlStringBuilder = new StringBuilder(url);
 
-        if (requiresAuthenticaton) {
+        if (requiresAuthentication) {
             parameters.add(new NameValuePair("apikey", _key));
         }
 
@@ -117,13 +118,20 @@ public class BittrexApiClient {
         final ArrayList<NameValuePair> requestHeaders = new ArrayList<>();
         final String requestUrl = urlStringBuilder.toString();
 
-        if (requiresAuthenticaton) {
-            requestHeaders.add(new NameValuePair("apisign", signUrl(requestUrl)));
+        if (requiresAuthentication) {
+            requestHeaders.add(new NameValuePair(HttpHeader.ApiSign, signUrl(requestUrl)));
         }
 
         return new Downloader.Request(requestUrl, requestHeaders);
     }
 
+    /**
+     * Used to cancel a buy or sell order.
+     * @param uuid uuid of buy or sell order
+     * @return The status of the cancel request
+     * @throws IOException If there is a network error
+     * @see CancelOrderResponse
+     */
     public CancelOrderResponse cancelOrder(@NonNull UUID uuid) throws IOException {
         Ensure.isNotNull("uuid", uuid);
 
@@ -136,6 +144,13 @@ public class BittrexApiClient {
         return Gson.fromJson(response, CancelOrderResponse.class);
     }
 
+    /**
+     * Used to retrieve the balance from your account for a specific currency.
+     * @param currency string literal for the currency (ex: LTC)
+     * @return The balance for the requested currency
+     * @throws IOException If there is a network error
+     * @see GetBalanceResponse
+     */
     public GetBalanceResponse getBalance(@NonNull String currency) throws IOException {
         Ensure.isNotNullOrWhitespace("currency", currency);
 
@@ -148,6 +163,12 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetBalanceResponse.class);
     }
 
+    /**
+     * Used to retrieve all balances from your account.
+     * @return A list of balances
+     * @throws IOException If there is a network error
+     * @see GetBalancesResponse
+     */
     public GetBalancesResponse getBalances() throws IOException {
         final Downloader.Request request = buildRequest(URL_GETBALANCES, true);
         final String response = _downloader.execute(request).bodyString();
@@ -155,6 +176,12 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetBalancesResponse.class);
     }
 
+    /**
+     * Used to get all supported currencies at Bittrex along with other meta data.
+     * @return A list of currencies
+     * @throws IOException If there is a network error
+     * @see GetCurrenciesResponse
+     */
     public GetCurrenciesResponse getCurrencies() throws IOException {
         final Downloader.Request request = buildRequest(URL_GETCURRENCIES);
         final String response = _downloader.execute(request).bodyString();
@@ -162,6 +189,13 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetCurrenciesResponse.class);
     }
 
+    /**
+     * Used to retrieve or generate an address for a specific currency. If one does not exist, the call will fail and return ADDRESS_GENERATING until one is available.
+     * @param currency A string literal for the currency (ie. BTC)
+     * @return A deposit address for the requested currency
+     * @throws IOException If there is a network error
+     * @see GetDepositAddressResponse
+     */
     public GetDepositAddressResponse getDepositAddress(@NonNull String currency) throws IOException {
         Ensure.isNotNullOrWhitespace("currency", currency);
 
@@ -174,10 +208,23 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetDepositAddressResponse.class);
     }
 
+    /**
+     * Used to retrieve your deposit history.
+     * @return The deposit history
+     * @throws IOException If there is a network error
+     * @see GetDepositHistoryResponse
+     */
     public GetDepositHistoryResponse getDepositHistory() throws IOException {
         return getDepositHistory(null);
     }
 
+    /**
+     * Used to retrieve your deposit history.
+     * @param currency An optional string literal for the currency (ie. BTC). If omitted, will return for all currencies
+     * @return The deposit history for the requested currency
+     * @throws IOException If there is a network error
+     * @see GetDepositHistoryResponse
+     */
     public GetDepositHistoryResponse getDepositHistory(String currency) throws IOException {
         final ArrayList<NameValuePair> parameters = new ArrayList<>();
 
@@ -191,6 +238,13 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetDepositHistoryResponse.class);
     }
 
+    /**
+     * Used to retrieve the latest trades that have occurred for a specific market.
+     * @param market A string literal for the market (ex: BTC-LTC)
+     * @return The latest trades that have occurred for the requested market
+     * @throws IOException If there is a network error
+     * @see GetMarketHistoryResponse
+     */
     public GetMarketHistoryResponse getMarketHistory(@NonNull String market) throws IOException {
         Ensure.isNotNullOrWhitespace("market", market);
 
@@ -203,6 +257,12 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetMarketHistoryResponse.class);
     }
 
+    /**
+     * Used to get the open and available trading markets at Bittrex along with other meta data.
+     * @return The available trading markets
+     * @throws IOException If there is a network error
+     * @see GetMarketsResponse
+     */
     public GetMarketsResponse getMarkets() throws IOException {
         final Downloader.Request request = buildRequest(URL_GETMARKETS);
         final String response = _downloader.execute(request).bodyString();
@@ -210,6 +270,12 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetMarketsResponse.class);
     }
 
+    /**
+     * Used to get the last 24 hour summary of all active exchanges.
+     * @return The last 24 hour summary of all active exchanges
+     * @throws IOException If there is a network error
+     * @see GetMarketSummariesResponse
+     */
     public GetMarketSummariesResponse getMarketSummaries() throws IOException {
         final Downloader.Request request = buildRequest(URL_GETMARKETSUMMARIES);
         final String response = _downloader.execute(request).bodyString();
@@ -217,6 +283,13 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetMarketSummariesResponse.class);
     }
 
+    /**
+     * Used to get the last 24 hour summary for a specific exchange.
+     * @param market A string literal for the market (ex: BTC-LTC)
+     * @return The last 24 hour summary for the requested exchange
+     * @throws IOException If there is a network error
+     * @see GetMarketSummaryResponse
+     */
     public GetMarketSummaryResponse getMarketSummary(@NonNull String market) throws IOException {
         Ensure.isNotNullOrWhitespace("market", market);
 
@@ -229,6 +302,13 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetMarketSummaryResponse.class);
     }
 
+    /**
+     * Used to retrieve a single order by uuid.
+     * @param uuid The uuid of the buy or sell order
+     * @return The requested order details
+     * @throws IOException If there is a network error
+     * @see GetOrderResponse
+     */
     public GetOrderResponse getOrder(@NonNull UUID uuid) throws IOException {
         Ensure.isNotNull("uuid", uuid);
 
@@ -241,6 +321,13 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetOrderResponse.class);
     }
 
+    /**
+     * Used to retrieve the order book for a given market.
+     * @param market A string literal for the market (ex: BTC-LTC
+     * @return The order book for the requested market
+     * @throws IOException If there is a network error
+     * @see GetOrderBookResponse
+     */
     // TODO: Expose the 'type' parameter?
     public GetOrderBookResponse getOrderBook(@NonNull String market) throws IOException {
         Ensure.isNotNullOrWhitespace("market", market);
@@ -255,10 +342,23 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetOrderBookResponse.class);
     }
 
+    /**
+     * Used to retrieve your order history for all markets.
+     * @return Your order history
+     * @throws IOException If there is a network error
+     * @see GetOrderHistoryResponse
+     */
     public GetOrderHistoryResponse getOrderHistory() throws IOException {
         return getOrderHistory(null);
     }
 
+    /**
+     * Used to retrieve your order history.
+     * @param market An optional string literal for the market (ie. BTC-LTC). If omitted, will return for all markets
+     * @return Your order history
+     * @throws IOException If there is a network error
+     * @see GetOrderHistoryResponse
+     */
     public GetOrderHistoryResponse getOrderHistory(String market) throws IOException {
         final ArrayList<NameValuePair> parameters = new ArrayList<>();
 
@@ -272,6 +372,13 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetOrderHistoryResponse.class);
     }
 
+    /**
+     * Used to get the current tick values for a market.
+     * @param market A string literal for the market (ex: BTC-LTC)
+     * @return The current tick values for the requested market
+     * @throws IOException If there is a network error
+     * @see GetTickerResponse
+     */
     public GetTickerResponse getTicker(@NonNull String market) throws IOException {
         Ensure.isNotNullOrWhitespace("market", market);
 
@@ -284,10 +391,23 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetTickerResponse.class);
     }
 
+    /**
+     * Used to retrieve your withdrawal history.
+     * @return Your withdrawal history
+     * @throws IOException If there is a network error
+     * @see GetWithdrawalHistoryResponse
+     */
     public GetWithdrawalHistoryResponse getWithdrawalHistory() throws IOException {
         return getWithdrawalHistory(null);
     }
 
+    /**
+     * Used to retrieve your withdrawal history.
+     * @param currency An optional string literal for the currency (ie. BTC). If omitted, will return for all currencies
+     * @return Your withdrawal history
+     * @throws IOException If there is a network error
+     * @see GetWithdrawalHistoryResponse
+     */
     public GetWithdrawalHistoryResponse getWithdrawalHistory(String currency) throws IOException {
         final ArrayList<NameValuePair> parameters = new ArrayList<>();
 
@@ -301,6 +421,15 @@ public class BittrexApiClient {
         return Gson.fromJson(response, GetWithdrawalHistoryResponse.class);
     }
 
+    /**
+     * Used to place a limit buy order in a specific market. Make sure you have the proper permissions set on your API keys for this call to work
+     * @param market A string literal for the market (ex: BTC-LTC)
+     * @param quantity The amount to purchase
+     * @param rate The rate at which to place the order
+     * @return The uuid for the buy
+     * @throws IOException If there is a network error
+     * @see PlaceBuyLimitOrderResponse
+     */
     public PlaceBuyLimitOrderResponse placeBuyLimitOrder(@NonNull String market, double quantity, double rate) throws IOException {
         Ensure.isNotNullOrWhitespace("market", market);
         Ensure.isTrue("quantity", quantity > 0.0);
@@ -317,10 +446,14 @@ public class BittrexApiClient {
         return Gson.fromJson(response, PlaceBuyLimitOrderResponse.class);
     }
 
-    /*
-    market 	required 	a string literal for the market (ex: BTC-LTC)
-    quantity 	required 	the amount to purchase
-    rate 	required 	the rate at which to place the order
+    /**
+     * Used to place a limit sell order in a specific market. Make sure you have the proper permissions set on your API keys for this call to work
+     * @param market A string literal for the market (ex: BTC-LTC)
+     * @param quantity The amount to purchase
+     * @param rate The rate at which to place the order
+     * @return The uuid for the sell
+     * @throws IOException If there is a network error
+     * @see PlaceSellLimitOrderResponse
      */
     public PlaceSellLimitOrderResponse placeSellLimitOrder(@NonNull String market, double quantity, double rate) throws IOException {
         Ensure.isNotNullOrWhitespace("market", market);
@@ -338,7 +471,7 @@ public class BittrexApiClient {
         return Gson.fromJson(response, PlaceSellLimitOrderResponse.class);
     }
 
-    public String signUrl(@NonNull String url) {
+    private String signUrl(@NonNull String url) {
         Ensure.isNotNullOrWhitespace("url", url);
         String digest = null;
 
@@ -375,6 +508,12 @@ public class BittrexApiClient {
         private final String key;
         private final String secret;
 
+        /**
+         * A builder used to validate and build a BittrexApiClient
+         * @param key The api key used for requests
+         * @param secret The api secret used for requests
+         * @see BittrexApiClient
+         */
         public Builder(@NonNull String key, @NonNull String secret) {
             isNotNullOrWhitespace("_key", key);
             isNotNullOrWhitespace("_secret", secret);
@@ -383,6 +522,11 @@ public class BittrexApiClient {
             this.secret = secret;
         }
 
+        /**
+         * Generates the BittrexApiClient
+         * @return A BittrexApiClient
+         * @see BittrexApiClient
+         */
         @NonNull
         public BittrexApiClient build() {
             if (downloader == null) {
@@ -392,6 +536,11 @@ public class BittrexApiClient {
             return new BittrexApiClient(this);
         }
 
+        /**
+         * Sets the Downloader implementation used to execute api calls.
+         * @param downloader The Downloader implementation used to execute api calls. A downloader must not already be set
+         * @return This BittrexApiClient.Builder instance for method chaining
+         */
         @NonNull
         public Builder downloader(@NonNull Downloader downloader) {
             isNotNull("downloader", downloader, "Downloader must not be null.");

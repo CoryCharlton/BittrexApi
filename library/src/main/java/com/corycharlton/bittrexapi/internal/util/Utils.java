@@ -1,14 +1,7 @@
 package com.corycharlton.bittrexapi.internal.util;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.annotation.NonNull;
 
-import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
-
-
+/*
 public final class Utils {
     public static String getUserAgent(@NonNull Context context, @NonNull String applicationName) {
         // TODO: Load the application name from package?
@@ -26,3 +19,4 @@ public final class Utils {
 
     private Utils() {} // Cannot instantiate
 }
+*/

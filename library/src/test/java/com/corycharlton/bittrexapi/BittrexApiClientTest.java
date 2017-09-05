@@ -57,7 +57,7 @@ public class BittrexApiClientTest {
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_null() throws IOException {
+        public void it_should_throw_exception_if_uuid_is_null() throws IOException {
             getClient().cancelOrder(null);
         }
     }
@@ -230,17 +230,17 @@ public class BittrexApiClientTest {
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_empty() throws IOException {
+        public void it_should_throw_exception_if_market_is_empty() throws IOException {
             getClient().getMarketHistory(StringUtils.EMPTY);
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_null() throws IOException {
+        public void it_should_throw_exception_if_market_is_null() throws IOException {
             getClient().getMarketHistory(null);
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_whitespace() throws IOException {
+        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
             getClient().getMarketHistory(" \t\r\n");
         }
     }
@@ -341,17 +341,17 @@ public class BittrexApiClientTest {
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_empty() throws IOException {
+        public void it_should_throw_exception_if_market_is_empty() throws IOException {
             getClient().getMarketSummary(StringUtils.EMPTY);
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_null() throws IOException {
+        public void it_should_throw_exception_if_market_is_null() throws IOException {
             getClient().getMarketSummary(null);
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_whitespace() throws IOException {
+        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
             getClient().getMarketSummary(" \t\r\n");
         }
     }
@@ -394,7 +394,7 @@ public class BittrexApiClientTest {
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_null() throws IOException {
+        public void it_should_throw_exception_if_uuid_is_null() throws IOException {
             getClient().getOrder(null);
         }
     }
@@ -430,17 +430,17 @@ public class BittrexApiClientTest {
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_empty() throws IOException {
+        public void it_should_throw_exception_if_market_is_empty() throws IOException {
             getClient().getOrderBook(StringUtils.EMPTY);
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_null() throws IOException {
+        public void it_should_throw_exception_if_market_is_null() throws IOException {
             getClient().getOrderBook(null);
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_whitespace() throws IOException {
+        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
             getClient().getOrderBook(" \t\r\n");
         }
     }
@@ -498,18 +498,18 @@ public class BittrexApiClientTest {
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_empty() throws IOException {
-            getClient().getMarketSummary(StringUtils.EMPTY);
+        public void it_should_throw_exception_if_market_is_empty() throws IOException {
+            getClient().getTicker(StringUtils.EMPTY);
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_null() throws IOException {
-            getClient().getMarketSummary(null);
+        public void it_should_throw_exception_if_market_is_null() throws IOException {
+            getClient().getTicker(null);
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_parameter_is_whitespace() throws IOException {
-            getClient().getMarketSummary(" \t\r\n");
+        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
+            getClient().getTicker(" \t\r\n");
         }
     }
 
