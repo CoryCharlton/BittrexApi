@@ -5,6 +5,8 @@ project.ext {
     buildToolsVersion = '26'
     supportLibraryVersion = '26.0.1'
     releaseVersion = 'r1.1.0'
+    versionCode = 1
+    versionName = '0.1.0'
     modulePrefix = ':'
     if (gradle.ext.has('androidBittrexApiModulePrefix')) {
         modulePrefix += gradle.ext.androidBittrexApiModulePrefix
