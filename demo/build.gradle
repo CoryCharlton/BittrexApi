@@ -38,4 +38,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
 
     compile project(':library')
+    compile project(':okhttp')
 }

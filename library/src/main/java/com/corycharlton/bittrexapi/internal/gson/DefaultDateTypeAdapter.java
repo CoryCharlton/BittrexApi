@@ -93,11 +93,16 @@ final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
 
     // These methods need to be synchronized since JDK DateFormat classes are not thread-safe
     // See issue 162
+    // TODO: Add a test for null
     @Override
     public void write(JsonWriter out, Date value) throws IOException {
         synchronized (localFormat) {
-            String dateFormatAsString = enUsFormat.format(value);
-            out.value(dateFormatAsString);
+            if (value == null) {
+                out.nullValue();
+            } else {
+                String dateFormatAsString = enUsFormat.format(value);
+                out.value(dateFormatAsString);
+            }
         }
     }
 

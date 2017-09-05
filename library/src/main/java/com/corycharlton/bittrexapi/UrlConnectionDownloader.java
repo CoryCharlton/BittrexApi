@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * A {@link Downloader} implementation that uses {@link HttpURLConnection} to execute requests
+ * A {@link Downloader} implementation that uses a {@link HttpURLConnection} to execute requests
  */
 public class UrlConnectionDownloader implements Downloader {
 
