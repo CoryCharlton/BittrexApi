@@ -10,6 +10,7 @@ import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
 import com.corycharlton.bittrexapi.demo.settings.ApplicationSettings;
 import com.corycharlton.bittrexapi.extension.okhttp.OkHttpDownloader;
 import com.corycharlton.bittrexapi.response.CancelOrderResponse;
+import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
 import com.corycharlton.bittrexapi.response.GetOpenOrdersResponse;
 import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
 import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
@@ -32,13 +33,14 @@ public class MainActivity extends AppCompatActivity {
         try {
             final BittrexApiClient client = new BittrexApiClient.Builder()
                     .downloader(new OkHttpDownloader())
-                    .key(ApplicationSettings.instance().getKey())
-                    .secret(ApplicationSettings.instance().getSecret())
+                    //.key(ApplicationSettings.instance().getKey())
+                    //.secret(ApplicationSettings.instance().getSecret())
                     .build();
 
-            CancelOrderResponse response11 = client.cancelOrder(UUID.randomUUID());
+            GetCurrenciesResponse response3 = client.getCurrencies();
+            //CancelOrderResponse response11 = client.cancelOrder(UUID.randomUUID());
 
-            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint... " + response11.toString());
+            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint... " + response3.toString());
 
             /*
             GetBalanceResponse response1 = client.getBalance("BTC");

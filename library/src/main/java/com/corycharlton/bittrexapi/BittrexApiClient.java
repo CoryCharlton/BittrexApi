@@ -99,6 +99,8 @@ public class BittrexApiClient {
         final StringBuilder urlStringBuilder = new StringBuilder(url);
 
         if (requiresAuthentication) {
+            Ensure.isValidState("authentication", !StringUtils.isNullOrWhiteSpace(_key) && !StringUtils.isNullOrWhiteSpace(_secret), "An api key and secret are required for authenticated calls");
+
             parameters.add(new NameValuePair("apikey", _key));
         }
 
@@ -519,9 +521,9 @@ public class BittrexApiClient {
 
     public static final class Builder {
 
-        Downloader downloader;
-        String key;
-        String secret;
+        private Downloader downloader;
+        private String key;
+        private String secret;
 
         /**
          * A builder used to validate and build a {@link BittrexApiClient}
@@ -536,13 +538,6 @@ public class BittrexApiClient {
          */
         @NonNull
         public BittrexApiClient build() {
-            // TODO: Do I need to require key and secret?
-            // If I don't then users could make public calls
-            // Need to do a little more verification to ensure
-            // the class will handle this case correctly
-            isValidState("key", !StringUtils.isNullOrWhiteSpace(key), "An api key must be set");
-            isValidState("secret", !StringUtils.isNullOrWhiteSpace(secret), "An api secret must be set");
-
             if (downloader == null) {
                 this.downloader = new UrlConnectionDownloader();
             }

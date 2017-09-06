@@ -29,6 +29,7 @@ public class BittrexApiClient_BuilderTest {
             assertNotNull(buildValidBuilder().build());
         }
 
+        /*
         @Test(expected = IllegalStateException.class)
         public void it_should_throw_exception_if_key_is_not_set() {
             final BittrexApiClient.Builder builder = buildValidBuilder();
@@ -44,6 +45,7 @@ public class BittrexApiClient_BuilderTest {
             builder.secret = null;
             builder.build();
         }
+        */
     }
 
     public static class When_downloader_is_called {
