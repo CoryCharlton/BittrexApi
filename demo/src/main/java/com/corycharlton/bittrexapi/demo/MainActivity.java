@@ -10,9 +10,11 @@ import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
 import com.corycharlton.bittrexapi.demo.settings.ApplicationSettings;
 import com.corycharlton.bittrexapi.extension.okhttp.OkHttpDownloader;
 import com.corycharlton.bittrexapi.response.CancelOrderResponse;
+import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
 import com.corycharlton.bittrexapi.response.GetOpenOrdersResponse;
 import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
 import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
+import com.corycharlton.bittrexapi.response.WithdrawResponse;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -26,19 +28,19 @@ public class MainActivity extends AppCompatActivity {
 
         ApplicationSettings.initialize(this);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        // NOTE: This is a hack while developing the library. Please never do this in a real application.
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
 
         try {
             final BittrexApiClient client = new BittrexApiClient.Builder()
-                    .downloader(new OkHttpDownloader())
+                    //.downloader(new OkHttpDownloader())
                     .key(ApplicationSettings.instance().getKey())
                     .secret(ApplicationSettings.instance().getSecret())
                     .build();
 
-            CancelOrderResponse response11 = client.cancelOrder(UUID.randomUUID());
+            GetCurrenciesResponse response = client.getCurrencies();
 
-            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint... " + response11.toString());
+            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint... " + response.toString());
 
             /*
             GetBalanceResponse response1 = client.getBalance("BTC");
@@ -63,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
             CancelOrderResponse response19 = client.cancelOrder(UUID.fromString("b45c12ab-eb10-418a-ba4a-4e85b8d7db28"));
             PlaceBuyLimitOrderResponse response20 = client.placeBuyLimitOrder("BTC-SC", 1000, 0.00000150);
             PlaceSellLimitOrderResponse response21 = client.placeSellLimitOrder("BTC-SC", 1000, 0.00001930);
+            WithdrawResponse response3 = client.withdraw("BTC", 0.004, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
+
             */
         } catch (IOException e) {
             Log.e(BittrexApiLibraryInfo.TAG, e.toString(), e);
