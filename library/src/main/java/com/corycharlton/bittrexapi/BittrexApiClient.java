@@ -25,6 +25,7 @@ import com.corycharlton.bittrexapi.response.GetTickerResponse;
 import com.corycharlton.bittrexapi.response.GetWithdrawalHistoryResponse;
 import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
 import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
+import com.corycharlton.bittrexapi.response.WithdrawResponse;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -67,6 +68,7 @@ public class BittrexApiClient {
     static final String URL_GETWITHDRAWALHISTORY = "https://bittrex.com/api/v1.1/account/getwithdrawalhistory";
     static final String URL_PLACEBUYLIMITORDER = "https://bittrex.com/api/v1.1/market/buylimit";
     static final String URL_PLACESELLLIMITORDER = "https://bittrex.com/api/v1.1/market/selllimit";
+    static final String URL_WITHDRAW = "https://bittrex.com/api/v1.1/account/withdraw";
 
     private final Downloader _downloader;
     private final String _key;
@@ -517,6 +519,47 @@ public class BittrexApiClient {
         }
 
         return digest;
+    }
+
+    /**
+     * Used to withdraw funds from your account.
+     * @param currency A string literal for the currency (ie. BTC)
+     * @param quantity The quantity of coins to withdraw
+     * @param address The address where to send the funds
+     * @return A {@link WithdrawResponse}
+     * @throws IOException If there is a network error
+     */
+    public WithdrawResponse withdraw(@NonNull String currency, double quantity, @NonNull String address) throws IOException {
+        return withdraw(currency, quantity, address, null);
+    }
+
+    /**
+     * Used to withdraw funds from your account.
+     * @param currency A string literal for the currency (ie. BTC)
+     * @param quantity The quantity of coins to withdraw
+     * @param address The address where to send the funds
+     * @param paymentId An optional string used for CryptoNotes/BitShareX/Nxt optional field (memo/paymentid)
+     * @return A {@link WithdrawResponse}
+     * @throws IOException If there is a network error
+     */
+    public WithdrawResponse withdraw(@NonNull String currency, double quantity, @NonNull String address, String paymentId) throws IOException {
+        Ensure.isNotNullOrWhitespace("address", address);
+        Ensure.isNotNullOrWhitespace("currency", currency);
+        Ensure.isTrue("quantity", quantity > 0.0);
+
+        final ArrayList<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new NameValuePair("address", address));
+        parameters.add(new NameValuePair("currency", currency));
+        parameters.add(new NameValuePair("quantity", Double.toString(quantity)));
+
+        if (!StringUtils.isNullOrWhiteSpace(paymentId)) {
+            parameters.add(new NameValuePair("paymentid", paymentId));
+        }
+
+        final Downloader.Request request = buildRequest(URL_WITHDRAW, parameters, true);
+        final String response = _downloader.execute(request).bodyString();
+
+        return Gson.fromJson(response, WithdrawResponse.class);
     }
 
     public static final class Builder {

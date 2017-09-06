@@ -14,8 +14,8 @@ import com.corycharlton.bittrexapi.model.Order;
 import com.corycharlton.bittrexapi.model.OrderBook;
 import com.corycharlton.bittrexapi.model.OrderBookEntry;
 import com.corycharlton.bittrexapi.model.OrderHistory;
-import com.corycharlton.bittrexapi.model.OrderId;
 import com.corycharlton.bittrexapi.model.Ticker;
+import com.corycharlton.bittrexapi.model.Uuid;
 import com.corycharlton.bittrexapi.model.Withdrawal;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
 import com.corycharlton.bittrexapi.response.*;
@@ -35,8 +35,8 @@ import static org.junit.Assert.*;
 @SuppressWarnings("ConstantConditions")
 public class BittrexApiClientTest {
 
-    private static final String key = "12345";
-    private static final String secret = "54321";
+    private static final String key = "c6a6881faa1160c8869f0f85431e2acc";
+    private static final String secret = "259cf3b30a4c82715c6d58a951617916";
     
     private static void assertDateParsed(Date date) {
         // TODO: Is this enough to verify data parsed?
@@ -592,7 +592,7 @@ public class BittrexApiClientTest {
             assertNotNull(response);
             assertTrue(response.success());
 
-            final OrderId item = response.result();
+            final Uuid item = response.result();
 
             assertNotNull(item);
 
@@ -633,7 +633,7 @@ public class BittrexApiClientTest {
             assertNotNull(response);
             assertTrue(response.success());
 
-            final OrderId item = response.result();
+            final Uuid item = response.result();
 
             assertNotNull(item);
 
@@ -663,6 +663,57 @@ public class BittrexApiClientTest {
         @Test(expected = IllegalArgumentException.class)
         public void it_should_throw_exception_if_rate_is_less_than_or_equal_to_zero() throws IOException {
             getClient().placeSellLimitOrder("BTC-LTC", 1.00000000, 0.00000000);
+        }
+    }
+
+    public static class When_withdraw_is_called {
+        @Test()
+        public void it_should_parse_response() throws IOException {
+            final WithdrawResponse response = getClient().withdraw("BTC", 1.00000, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
+
+            assertNotNull(response);
+            assertTrue(response.success());
+
+            final Uuid item = response.result();
+
+            assertNotNull(item);
+
+            assertEquals("57aac6c3-197f-45e0-af29-cd650cc5dea8", item.uuid().toString());
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_address_is_empty() throws IOException {
+            getClient().withdraw("BTC", 1.00000000, StringUtils.EMPTY);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_address_is_null() throws IOException {
+            getClient().withdraw("BTC", 1.00000000, null);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_address_is_whitespace() throws IOException {
+            getClient().withdraw("BTC", 1.00000000, " \t\r\n");
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_currency_is_empty() throws IOException {
+            getClient().withdraw(StringUtils.EMPTY, 1.00000000, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_currency_is_null() throws IOException {
+            getClient().withdraw(null, 1.00000000, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_currency_is_whitespace() throws IOException {
+            getClient().withdraw(" \t\r\n", 1.00000000, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_quantity_is_less_than_or_equal_to_zero() throws IOException {
+            getClient().withdraw("BTC-LTC", 0.00000000, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
         }
     }
 
@@ -713,6 +764,8 @@ public class BittrexApiClientTest {
                     return handlePlaceBuyLimitOrder();
                 case BittrexApiClient.URL_PLACESELLLIMITORDER:
                     return handlePlaceSellLimitOrder();
+                case BittrexApiClient.URL_WITHDRAW:
+                    return handleWithdraw();
                 default:
                     throw new IllegalArgumentException("No mock configured for " + url);
             }
@@ -1141,6 +1194,17 @@ public class BittrexApiClientTest {
 
         @NonNull
         private Response handlePlaceSellLimitOrder() {
+            return new Response("{\n" +
+                    "\t\"success\": true,\n" +
+                    "\t\"message\": \"\",\n" +
+                    "\t\"result\": {\n" +
+                    "\t\t\"uuid\": \"57aac6c3-197f-45e0-af29-cd650cc5dea8\"\n" +
+                    "\t}\n" +
+                    "}\n", 200);
+        }
+
+        @NonNull
+        private Response handleWithdraw() {
             return new Response("{\n" +
                     "\t\"success\": true,\n" +
                     "\t\"message\": \"\",\n" +

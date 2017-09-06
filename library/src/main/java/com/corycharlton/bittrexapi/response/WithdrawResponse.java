@@ -3,8 +3,8 @@ package com.corycharlton.bittrexapi.response;
 import com.corycharlton.bittrexapi.model.Uuid;
 
 @SuppressWarnings("EmptyMethod")
-public class PlaceSellLimitOrderResponse extends Response<Uuid> {
-    private PlaceSellLimitOrderResponse() {} // Cannot be instantiated
+public class WithdrawResponse extends Response<Uuid> {
+    private WithdrawResponse() {} // Cannot be instantiated
 
     @Override
     public Uuid result() {
