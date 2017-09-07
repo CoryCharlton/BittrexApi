@@ -4,7 +4,7 @@ package com.corycharlton.bittrexapi;
 public final class BittrexApiLibraryInfo {
 
     public static final String TAG = "BittrexApi";
-    public static final String VERSION = "1.1.0";
+    public static final String VERSION = "1.0.0";
     public static final String USERAGENT = "com.corycharlton.bittrexapi/" + VERSION;
 
     /**
@@ -14,7 +14,7 @@ public final class BittrexApiLibraryInfo {
      * corresponding integer version 1002003 (001-002-003), and "123.45.6" has the corresponding
      * integer version 123045006 (123-045-006).
      */
-    public static final int VERSION_INT = 1001000;
+    public static final int VERSION_INT = 1000000;
 
     private BittrexApiLibraryInfo() {} // Cannot instantiate.
 }
