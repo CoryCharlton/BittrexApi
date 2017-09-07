@@ -40,6 +40,10 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-annotations:' + supportLibraryVersion
 
+    // http://jakewharton.github.io/butterknife/
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
     // http://square.github.io/okhttp/
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
 

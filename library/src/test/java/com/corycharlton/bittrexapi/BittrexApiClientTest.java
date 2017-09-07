@@ -2,6 +2,7 @@ package com.corycharlton.bittrexapi;
 
 import android.support.annotation.NonNull;
 
+import com.corycharlton.bittrexapi.internal.constants.Url;
 import com.corycharlton.bittrexapi.model.Balance;
 import com.corycharlton.bittrexapi.model.Currency;
 import com.corycharlton.bittrexapi.model.Deposit;
@@ -18,6 +19,25 @@ import com.corycharlton.bittrexapi.model.Ticker;
 import com.corycharlton.bittrexapi.model.Uuid;
 import com.corycharlton.bittrexapi.model.Withdrawal;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
+import com.corycharlton.bittrexapi.request.CancelOrderRequest;
+import com.corycharlton.bittrexapi.request.GetBalanceRequest;
+import com.corycharlton.bittrexapi.request.GetBalancesRequest;
+import com.corycharlton.bittrexapi.request.GetCurrenciesRequest;
+import com.corycharlton.bittrexapi.request.GetDepositAddressRequest;
+import com.corycharlton.bittrexapi.request.GetDepositHistoryRequest;
+import com.corycharlton.bittrexapi.request.GetMarketHistoryRequest;
+import com.corycharlton.bittrexapi.request.GetMarketSummariesRequest;
+import com.corycharlton.bittrexapi.request.GetMarketSummaryRequest;
+import com.corycharlton.bittrexapi.request.GetMarketsRequest;
+import com.corycharlton.bittrexapi.request.GetOpenOrdersRequest;
+import com.corycharlton.bittrexapi.request.GetOrderBookRequest;
+import com.corycharlton.bittrexapi.request.GetOrderHistoryRequest;
+import com.corycharlton.bittrexapi.request.GetOrderRequest;
+import com.corycharlton.bittrexapi.request.GetTickerRequest;
+import com.corycharlton.bittrexapi.request.GetWithdrawalHistoryRequest;
+import com.corycharlton.bittrexapi.request.PlaceBuyLimitOrderRequest;
+import com.corycharlton.bittrexapi.request.PlaceSellLimitOrderRequest;
+import com.corycharlton.bittrexapi.request.WithdrawRequest;
 import com.corycharlton.bittrexapi.response.*;
 
 import org.junit.Test;
@@ -52,25 +72,19 @@ public class BittrexApiClientTest {
                 .build();
     }
 
-    public static class When_cancelOrder_is_called {
+    public static class When_execute_is_called {
+
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final CancelOrderResponse response = getClient().cancelOrder(UUID.randomUUID());
+        public void it_should_execute_CancelOrderRequest() throws IOException {
+            final CancelOrderResponse response = getClient().execute(new CancelOrderRequest(UUID.randomUUID()));
 
             assertNotNull(response);
             assertTrue(response.success());
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_uuid_is_null() throws IOException {
-            getClient().cancelOrder(null);
-        }
-    }
-
-    public static class When_getBalance_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetBalanceResponse response = getClient().getBalance("BTC");
+        public void it_should_execute_GetBalanceRequest() throws IOException {
+            final GetBalanceResponse response = getClient().execute(new GetBalanceRequest("BTC"));
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -85,26 +99,9 @@ public class BittrexApiClientTest {
             assertEquals(0.00000000, result.pending(), 0.00000001);
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_currency_is_empty() throws IOException {
-            getClient().getBalance(StringUtils.EMPTY);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_currency_is_null() throws IOException {
-            getClient().getBalance(null);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_currency_is_whitespace() throws IOException {
-            getClient().getBalance(" \t\r\n");
-        }
-    }
-
-    public static class When_getBalances_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetBalancesResponse response = getClient().getBalances();
+        public void it_should_execute_GetBalancesRequest() throws IOException {
+            final GetBalancesResponse response = getClient().execute(new GetBalancesRequest());
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -115,7 +112,7 @@ public class BittrexApiClientTest {
             assertEquals(2, result.size());
 
             final Balance item = result.get(0);
-            
+
             assertNotNull(item);
             assertEquals("BTC", item.currency());
             assertEquals(0.0000000119203, item.available(), 0.00000001);
@@ -123,12 +120,10 @@ public class BittrexApiClientTest {
             assertEquals("CRYPTO-ADDRESS-BTC", item.cryptoAddress());
             assertEquals(0.00000000, item.pending(), 0.00000001);
         }
-    }
 
-    public static class When_getCurrencies_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetCurrenciesResponse response = getClient().getCurrencies();
+        public void it_should_execute_GetCurrenciesRequest() throws IOException {
+            final GetCurrenciesResponse response = getClient().execute(new GetCurrenciesRequest());
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -139,7 +134,7 @@ public class BittrexApiClientTest {
             assertEquals(2, result.size());
 
             final Currency item = result.get(0);
-            
+
             assertNotNull(item);
             assertEquals("BASE-ADDRESS", item.baseAddress());
             assertEquals("BITCOIN", item.coinType());
@@ -150,12 +145,10 @@ public class BittrexApiClientTest {
             assertEquals(0.0000000100000, item.txFee(), 0.00000001);
             assertEquals(null, item.notice());
         }
-    }
 
-    public static class When_getDepositAddress_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetDepositAddressResponse response = getClient().getDepositAddress("BTC");
+        public void it_should_execute_GetDepositAddressRequest() throws IOException {
+            final GetDepositAddressResponse response = getClient().execute(new GetDepositAddressRequest("BTC"));
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -167,26 +160,9 @@ public class BittrexApiClientTest {
             assertEquals("BTC", result.currency());
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_currency_is_empty() throws IOException {
-            getClient().getDepositAddress(StringUtils.EMPTY);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_currency_is_null() throws IOException {
-            getClient().getDepositAddress(null);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_currency_is_whitespace() throws IOException {
-            getClient().getDepositAddress(" \t\r\n");
-        }
-    }
-
-    public static class When_getDepositHistory_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetDepositHistoryResponse response = getClient().getDepositHistory();
+        public void it_should_execute_GetDepositHistoryRequest() throws IOException {
+            final GetDepositHistoryResponse response = getClient().execute(new GetDepositHistoryRequest());
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -197,7 +173,7 @@ public class BittrexApiClientTest {
             assertEquals(1, result.size());
 
             final Deposit item = result.get(0);
-            
+
             assertNotNull(item);
             assertEquals(0.50000000, item.amount(), 0.00000001);
             assertEquals(3, item.confirmations(), 0.00000001);
@@ -207,12 +183,10 @@ public class BittrexApiClientTest {
             assertDateParsed(item.lastUpdated());
             assertEquals("TX-ID", item.txId());
         }
-    }
 
-    public static class When_getMarketHistory_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetMarketHistoryResponse response = getClient().getMarketHistory("BTC-LTC");
+        public void it_should_execute_GetMarketHistoryRequest() throws IOException {
+            final GetMarketHistoryResponse response = getClient().execute(new GetMarketHistoryRequest("BTC-LTC"));
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -223,7 +197,7 @@ public class BittrexApiClientTest {
             assertEquals(2, result.size());
 
             final MarketHistory item = result.get(0);
-            
+
             assertNotNull(item);
             assertEquals("PARTIAL_FILL", item.fillType());
             assertEquals(68484991, item.id());
@@ -234,26 +208,9 @@ public class BittrexApiClientTest {
             assertEquals(0.05440290, item.total(), 0.00000001);
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_empty() throws IOException {
-            getClient().getMarketHistory(StringUtils.EMPTY);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_null() throws IOException {
-            getClient().getMarketHistory(null);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
-            getClient().getMarketHistory(" \t\r\n");
-        }
-    }
-
-    public static class When_getMarkets_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetMarketsResponse response = getClient().getMarkets();
+        public void it_should_execute_GetMarketsRequest() throws IOException {
+            final GetMarketsResponse response = getClient().execute(new GetMarketsRequest());
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -278,12 +235,10 @@ public class BittrexApiClientTest {
             assertEquals(0.00000001, item.minTradeSize(), 0.00000001);
             assertNull(item.notice());
         }
-    }
 
-    public static class When_getMarketSummaries_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetMarketSummariesResponse response = getClient().getMarketSummaries();
+        public void it_should_execute_GetMarketSummariesRequest() throws IOException {
+            final GetMarketSummariesResponse response = getClient().execute(new GetMarketSummariesRequest());
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -311,12 +266,10 @@ public class BittrexApiClientTest {
             assertDateParsed(item.timeStamp());
             assertEquals(969357.59257975, item.volume(), 0.00000001);
         }
-    }
 
-    public static class When_getMarketSummary_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetMarketSummaryResponse response = getClient().getMarketSummary("BTC-LTC");
+        public void it_should_execute_GetMarketSummaryRequest() throws IOException {
+            final GetMarketSummaryResponse response = getClient().execute(new GetMarketSummaryRequest("BTC-LTC"));
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -345,26 +298,9 @@ public class BittrexApiClientTest {
             assertEquals(140566.93272055, item.volume(), 0.00000001);
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_empty() throws IOException {
-            getClient().getMarketSummary(StringUtils.EMPTY);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_null() throws IOException {
-            getClient().getMarketSummary(null);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
-            getClient().getMarketSummary(" \t\r\n");
-        }
-    }
-
-    public static class When_getOpenOrders_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetOpenOrdersResponse response = getClient().getOpenOrders();
+        public void it_should_execute_GetOpenOrdersRequest() throws IOException {
+            final GetOpenOrdersResponse response = getClient().execute(new GetOpenOrdersRequest());
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -394,12 +330,72 @@ public class BittrexApiClientTest {
             assertEquals(1500.00000000, item.quantityRemaining(), 0.00000001);
             assertNull(item.uuid());
         }
-    }
 
-    public static class When_getOrder_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetOrderResponse response = getClient().getOrder(UUID.randomUUID());
+        public void it_should_execute_GetOrderBookRequest() throws IOException {
+            final GetOrderBookResponse response = getClient().execute(new GetOrderBookRequest("BTC-LTC"));
+
+            assertNotNull(response);
+            assertTrue(response.success());
+
+            final OrderBook result = response.result();
+
+            assertNotNull(result);
+            assertNotNull(result.buys());
+            assertNotNull(result.sells());
+
+
+            final OrderBookEntry buy = result.buys().get(0);
+
+            assertNotNull(buy);
+
+            assertEquals(7.58754865, buy.quantity(), 0.00000001);
+            assertEquals(0.01604003, buy.rate(), 0.00000001);
+
+            final OrderBookEntry sell = result.sells().get(0);
+
+            assertNotNull(sell);
+
+            assertEquals(0.00000075, sell.quantity(), 0.00000001);
+            assertEquals(0.01613499, sell.rate(), 0.00000001);
+        }
+
+        @Test()
+        public void it_should_execute_GetOrderHistoryRequest() throws IOException {
+            final GetOrderHistoryResponse response = getClient().execute(new GetOrderHistoryRequest());
+
+            assertNotNull(response);
+            assertTrue(response.success());
+
+            final ArrayList<OrderHistory> result = response.result();
+
+            assertNotNull(result);
+            assertEquals(2, result.size());
+
+            final OrderHistory item = result.get(0);
+
+            assertNotNull(item);
+
+            assertDateParsed(item.closed());
+            assertEquals(0.00003380, item.commission(), 0.00000001);
+            assertEquals("NONE", item.condition());
+            assertEquals(0.00000000, item.conditionTarget(), 0.00000001);
+            assertEquals("BTC-LSK", item.exchange());
+            assertFalse(item.immediateOrCancel());
+            assertFalse(item.isConditional());
+            assertEquals(0.00005000, item.limit(), 0.00000001);
+            assertEquals("LIMIT_SELL", item.orderType());
+            assertEquals("57aac6c3-197f-45e0-af29-cd650cc5dea8", item.orderUuid().toString());
+            assertEquals(0.01352350, item.price(), 0.00000001);
+            assertEquals(0.00135235, item.pricePerUnit(), 0.00000001);
+            assertEquals(10.00000000, item.quantity(), 0.00000001);
+            assertEquals(0.00000000, item.quantityRemaining(), 0.00000001);
+            assertDateParsed(item.timeStamp());
+        }
+
+        @Test()
+        public void it_should_execute_GetOrderRequest() throws IOException {
+            final GetOrderResponse response = getClient().execute(new GetOrderRequest(UUID.randomUUID()));
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -433,97 +429,9 @@ public class BittrexApiClientTest {
             assertEquals("LIMIT_BUY", item.type());
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_uuid_is_null() throws IOException {
-            getClient().getOrder(null);
-        }
-    }
-
-    public static class When_getOrderBook_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetOrderBookResponse response = getClient().getOrderBook("BTC-LTC");
-
-            assertNotNull(response);
-            assertTrue(response.success());
-
-            final OrderBook result = response.result();
-
-            assertNotNull(result);
-            assertNotNull(result.buys());
-            assertNotNull(result.sells());
-
-
-            final OrderBookEntry buy = result.buys().get(0);
-
-            assertNotNull(buy);
-
-            assertEquals(7.58754865, buy.quantity(), 0.00000001);
-            assertEquals(0.01604003, buy.rate(), 0.00000001);
-
-            final OrderBookEntry sell = result.sells().get(0);
-
-            assertNotNull(sell);
-
-            assertEquals(0.00000075, sell.quantity(), 0.00000001);
-            assertEquals(0.01613499, sell.rate(), 0.00000001);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_empty() throws IOException {
-            getClient().getOrderBook(StringUtils.EMPTY);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_null() throws IOException {
-            getClient().getOrderBook(null);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
-            getClient().getOrderBook(" \t\r\n");
-        }
-    }
-
-    public static class When_getOrderHistory_is_called {
-        @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetOrderHistoryResponse response = getClient().getOrderHistory();
-
-            assertNotNull(response);
-            assertTrue(response.success());
-
-            final ArrayList<OrderHistory> result = response.result();
-
-            assertNotNull(result);
-            assertEquals(2, result.size());
-
-            final OrderHistory item = result.get(0);
-
-            assertNotNull(item);
-
-            assertDateParsed(item.closed());
-            assertEquals(0.00003380, item.commission(), 0.00000001);
-            assertEquals("NONE", item.condition());
-            assertEquals(0.00000000, item.conditionTarget(), 0.00000001);
-            assertEquals("BTC-LSK", item.exchange());
-            assertFalse(item.immediateOrCancel());
-            assertFalse(item.isConditional());
-            assertEquals(0.00005000, item.limit(), 0.00000001);
-            assertEquals("LIMIT_SELL", item.orderType());
-            assertEquals("57aac6c3-197f-45e0-af29-cd650cc5dea8", item.orderUuid().toString());
-            assertEquals(0.01352350, item.price(), 0.00000001);
-            assertEquals(0.00135235, item.pricePerUnit(), 0.00000001);
-            assertEquals(10.00000000, item.quantity(), 0.00000001);
-            assertEquals(0.00000000, item.quantityRemaining(), 0.00000001);
-            assertDateParsed(item.timeStamp());
-        }
-    }
-
-    public static class When_getTicker_is_called {
-        @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetTickerResponse response = getClient().getTicker("BTC-LTC");
+        public void it_should_execute_GetTickerRequest() throws IOException {
+            final GetTickerResponse response = getClient().execute(new GetTickerRequest("BTC-LTC"));
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -537,26 +445,9 @@ public class BittrexApiClientTest {
             assertEquals(0.01613999, item.last(), 0.00000001);
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_empty() throws IOException {
-            getClient().getTicker(StringUtils.EMPTY);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_null() throws IOException {
-            getClient().getTicker(null);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
-            getClient().getTicker(" \t\r\n");
-        }
-    }
-
-    public static class When_getWithdrawalHistory_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final GetWithdrawalHistoryResponse response = getClient().getWithdrawalHistory();
+        public void it_should_execute_GetWithdrawalHistoryRequest() throws IOException {
+            final GetWithdrawalHistoryResponse response = getClient().execute(new GetWithdrawalHistoryRequest());
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -582,12 +473,10 @@ public class BittrexApiClientTest {
             assertEquals(0.00100000, item.txCost(), 0.00000001);
             assertEquals("TX-ID", item.txId());
         }
-    }
 
-    public static class When_placeBuyLimitOrder_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final PlaceBuyLimitOrderResponse response = getClient().placeBuyLimitOrder("BTC-LTC", 1.00000, 0.00000123);
+        public void it_should_execute_PlaceBuyLimitOrderRequest() throws IOException {
+            final PlaceBuyLimitOrderResponse response = getClient().execute(new PlaceBuyLimitOrderRequest("BTC-LTC", 1.00000, 0.00000123));
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -599,36 +488,9 @@ public class BittrexApiClientTest {
             assertEquals("57aac6c3-197f-45e0-af29-cd650cc5dea8", item.uuid().toString());
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_empty() throws IOException {
-            getClient().placeBuyLimitOrder(StringUtils.EMPTY, 1.00000000, 0.00000123);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_null() throws IOException {
-            getClient().placeBuyLimitOrder(null, 1.00000000, 0.00000123);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
-            getClient().placeBuyLimitOrder(" \t\r\n", 1.00000000, 0.00000123);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_quantity_is_less_than_or_equal_to_zero() throws IOException {
-            getClient().placeBuyLimitOrder("BTC-LTC", 0.00000000, 0.00000123);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_rate_is_less_than_or_equal_to_zero() throws IOException {
-            getClient().placeBuyLimitOrder("BTC-LTC", 1.00000000, 0.00000000);
-        }
-    }
-
-    public static class When_placeSellLimitOrder_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final PlaceSellLimitOrderResponse response = getClient().placeSellLimitOrder("BTC-LTC", 1.00000, 0.00000123);
+        public void it_should_execute_PlaceSellLimitOrderRequest() throws IOException {
+            final PlaceSellLimitOrderResponse response = getClient().execute(new PlaceSellLimitOrderRequest("BTC-LTC", 1.00000, 0.00000123));
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -640,36 +502,9 @@ public class BittrexApiClientTest {
             assertEquals("57aac6c3-197f-45e0-af29-cd650cc5dea8", item.uuid().toString());
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_empty() throws IOException {
-            getClient().placeSellLimitOrder(StringUtils.EMPTY, 1.00000000, 0.00000123);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_null() throws IOException {
-            getClient().placeSellLimitOrder(null, 1.00000000, 0.00000123);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_market_is_whitespace() throws IOException {
-            getClient().placeSellLimitOrder(" \t\r\n", 1.00000000, 0.00000123);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_quantity_is_less_than_or_equal_to_zero() throws IOException {
-            getClient().placeSellLimitOrder("BTC-LTC", 0.00000000, 0.00000123);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_rate_is_less_than_or_equal_to_zero() throws IOException {
-            getClient().placeSellLimitOrder("BTC-LTC", 1.00000000, 0.00000000);
-        }
-    }
-
-    public static class When_withdraw_is_called {
         @Test()
-        public void it_should_parse_response() throws IOException {
-            final WithdrawResponse response = getClient().withdraw("BTC", 1.00000, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
+        public void it_should_execute_WithdrawRequest() throws IOException {
+            final WithdrawResponse response = getClient().execute(new WithdrawRequest("BTC", 1.00000, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb"));
 
             assertNotNull(response);
             assertTrue(response.success());
@@ -679,41 +514,6 @@ public class BittrexApiClientTest {
             assertNotNull(item);
 
             assertEquals("57aac6c3-197f-45e0-af29-cd650cc5dea8", item.uuid().toString());
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_address_is_empty() throws IOException {
-            getClient().withdraw("BTC", 1.00000000, StringUtils.EMPTY);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_address_is_null() throws IOException {
-            getClient().withdraw("BTC", 1.00000000, null);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_address_is_whitespace() throws IOException {
-            getClient().withdraw("BTC", 1.00000000, " \t\r\n");
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_currency_is_empty() throws IOException {
-            getClient().withdraw(StringUtils.EMPTY, 1.00000000, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_currency_is_null() throws IOException {
-            getClient().withdraw(null, 1.00000000, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_currency_is_whitespace() throws IOException {
-            getClient().withdraw(" \t\r\n", 1.00000000, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void it_should_throw_exception_if_quantity_is_less_than_or_equal_to_zero() throws IOException {
-            getClient().withdraw("BTC-LTC", 0.00000000, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
         }
     }
 
@@ -728,43 +528,43 @@ public class BittrexApiClientTest {
             }
 
             switch (url) {
-                case BittrexApiClient.URL_CANCELORDER:
+                case Url.CANCELORDER:
                     return handleCancelOrder();
-                case BittrexApiClient.URL_GETBALANCE:
+                case Url.GETBALANCE:
                     return handleGetBalance();
-                case BittrexApiClient.URL_GETBALANCES:
+                case Url.GETBALANCES:
                     return handleGetBalances();
-                case BittrexApiClient.URL_GETCURRENCIES:
+                case Url.GETCURRENCIES:
                     return handleGetCurrencies();
-                case BittrexApiClient.URL_GETDEPOSITADDRESS:
+                case Url.GETDEPOSITADDRESS:
                     return handleGetDepositAddress();
-                case BittrexApiClient.URL_GETDEPOSITHISTORY:
+                case Url.GETDEPOSITHISTORY:
                     return handleGetDepositHistory();
-                case BittrexApiClient.URL_GETMARKETHISTORY:
+                case Url.GETMARKETHISTORY:
                     return handleGetMarketHistory();
-                case BittrexApiClient.URL_GETMARKETS:
+                case Url.GETMARKETS:
                     return handleGetMarkets();
-                case BittrexApiClient.URL_GETMARKETSUMMARIES:
+                case Url.GETMARKETSUMMARIES:
                     return handleGetMarketSummaries();
-                case BittrexApiClient.URL_GETMARKETSUMMARY:
+                case Url.GETMARKETSUMMARY:
                     return handleGetMarketSummary();
-                case BittrexApiClient.URL_GETOPENORDERS:
+                case Url.GETOPENORDERS:
                     return handleGetOpenOrders();
-                case BittrexApiClient.URL_GETORDER:
+                case Url.GETORDER:
                     return handleGetOrder();
-                case BittrexApiClient.URL_GETORDERBOOK:
+                case Url.GETORDERBOOK:
                     return handleGetOrderBook();
-                case BittrexApiClient.URL_GETORDERHISTORY:
+                case Url.GETORDERHISTORY:
                     return handleGetOrderHistory();
-                case BittrexApiClient.URL_GETTICKER:
+                case Url.GETTICKER:
                     return handleGetTicker();
-                case BittrexApiClient.URL_GETWITHDRAWALHISTORY:
+                case Url.GETWITHDRAWALHISTORY:
                     return handleGetWithdrawalHistory();
-                case BittrexApiClient.URL_PLACEBUYLIMITORDER:
+                case Url.PLACEBUYLIMITORDER:
                     return handlePlaceBuyLimitOrder();
-                case BittrexApiClient.URL_PLACESELLLIMITORDER:
+                case Url.PLACESELLLIMITORDER:
                     return handlePlaceSellLimitOrder();
-                case BittrexApiClient.URL_WITHDRAW:
+                case Url.WITHDRAW:
                     return handleWithdraw();
                 default:
                     throw new IllegalArgumentException("No mock configured for " + url);

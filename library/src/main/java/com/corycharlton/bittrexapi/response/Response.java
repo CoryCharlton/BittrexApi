@@ -5,7 +5,7 @@ import com.corycharlton.bittrexapi.internal.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
-abstract class Response<T> {
+public abstract class Response<T> {
     @SerializedName("message") private String _message;
     @SerializedName("success") private boolean _success;
     @SerializedName("result") private T _result;
