@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'jacoco-android'
+apply plugin: 'com.novoda.bintray-release'
 apply from: '../constants.gradle'
 
 android {
@@ -42,3 +43,9 @@ ext {
     javadocTitle = 'Core module'
 }
 apply from: '../javadoc_library.gradle'
+
+ext {
+    releaseArtifact = 'bittrexapi'
+    releaseDescription = 'The BittrexApi library'
+}
+apply from: '../publish.gradle'
