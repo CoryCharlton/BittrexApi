@@ -1,0 +1,9 @@
+publish {
+    userOrg = 'corycharlton'
+    groupId = 'com.corycharlton.bittrexapi'
+    artifactId = project.ext.releaseArtifact
+    repoName = "bittrexapi"
+    publishVersion = project.ext.versionName
+    desc = project.ext.releaseDescription
+    website = 'https://github.com/CoryCharlton/Android-Bittrex-Api'
+}
