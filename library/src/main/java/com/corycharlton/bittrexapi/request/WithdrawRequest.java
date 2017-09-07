@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 
 import com.corycharlton.bittrexapi.internal.constants.Url;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
-import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
 import com.corycharlton.bittrexapi.response.WithdrawResponse;
 
 import static com.corycharlton.bittrexapi.internal.util.Ensure.isNotNullOrWhitespace;

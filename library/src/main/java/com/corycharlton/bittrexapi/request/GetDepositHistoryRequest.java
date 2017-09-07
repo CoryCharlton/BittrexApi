@@ -1,14 +1,10 @@
 package com.corycharlton.bittrexapi.request;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.corycharlton.bittrexapi.internal.constants.Url;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
-import com.corycharlton.bittrexapi.response.GetBalanceResponse;
 import com.corycharlton.bittrexapi.response.GetDepositHistoryResponse;
-
-import static com.corycharlton.bittrexapi.internal.util.Ensure.isNotNullOrWhitespace;
 
 /**
  * Used to retrieve your deposit history.

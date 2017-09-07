@@ -2,13 +2,8 @@ package com.corycharlton.bittrexapi.request;
 
 import android.support.annotation.NonNull;
 
-import com.corycharlton.bittrexapi.BittrexApiClient;
-import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
 import com.corycharlton.bittrexapi.internal.constants.Url;
-import com.corycharlton.bittrexapi.internal.util.Ensure;
 import com.corycharlton.bittrexapi.response.GetDepositAddressResponse;
-
-import java.io.IOException;
 
 import static com.corycharlton.bittrexapi.internal.util.Ensure.*;
 

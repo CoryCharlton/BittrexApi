@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 
 import com.corycharlton.bittrexapi.internal.constants.Url;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
-import com.corycharlton.bittrexapi.response.GetDepositHistoryResponse;
 import com.corycharlton.bittrexapi.response.GetWithdrawalHistoryResponse;
 
 /**

@@ -1,8 +1,6 @@
 package com.corycharlton.bittrexapi;
 
 import android.os.AsyncTask;
-import android.support.annotation.AnyThread;
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
@@ -55,7 +53,7 @@ public class BittrexApiClient {
         final boolean requiresAuthentication = request.requiresAuthentication();
         final String url = request.url();
 
-        final List<NameValuePair> requestParameters = request.parameters();
+        @SuppressWarnings("unchecked") final List<NameValuePair> requestParameters = request.parameters();
 
         for (int i = 0; i < requestParameters.size(); i++) {
             parameters.add(requestParameters.get(i));
@@ -97,10 +95,6 @@ public class BittrexApiClient {
 
         return new Downloader.Request(requestUrl, requestHeaders);
     }
-
-    /**
-     * @throws IOException If there is a network error
-     */
 
     /**
      * Executes a {@link Request}

@@ -3,7 +3,6 @@ package com.corycharlton.bittrexapi.request;
 import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.constants.Url;
-import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
 import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
 
 import static com.corycharlton.bittrexapi.internal.util.Ensure.isNotNullOrWhitespace;

@@ -3,7 +3,6 @@ package com.corycharlton.bittrexapi.request;
 import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.constants.Url;
-import com.corycharlton.bittrexapi.response.CancelOrderResponse;
 import com.corycharlton.bittrexapi.response.GetOrderResponse;
 
 import java.util.UUID;

@@ -1,7 +1,6 @@
 package com.corycharlton.bittrexapi.request;
 
 import com.corycharlton.bittrexapi.internal.constants.Url;
-import com.corycharlton.bittrexapi.response.GetBalancesResponse;
 import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
 
 /**

@@ -3,12 +3,9 @@ package com.corycharlton.bittrexapi.request;
 
 import android.support.annotation.NonNull;
 
-import com.corycharlton.bittrexapi.Downloader;
 import com.corycharlton.bittrexapi.internal.NameValuePair;
-import com.corycharlton.bittrexapi.internal.gson.Gson;
 import com.corycharlton.bittrexapi.internal.util.Ensure;
 import com.corycharlton.bittrexapi.response.Response;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.Collections;
