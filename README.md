@@ -30,7 +30,7 @@ repositories {
 ```
 
 Next add a gradle compile dependency to the `build.gradle` file of your app
-module. The following will add a dependency to the full ExoPlayer library:
+module. The following will add a dependency to the library:
 
 ```gradle
 compile 'com.corycharlton.bittrexapi:bittrexapi:0.1.0'
@@ -39,7 +39,7 @@ compile 'com.corycharlton.bittrexapi:bittrexapi:0.1.0'
 Additionally include any extensions modules you need. The available modules
 are:
 
-* `extension-okhttp`: OkHttp extension for BittrexApi.
+* `extension-okhttp`: OkHttp extension for BittrexApi. 
 
 For more details, see the project on [Bintray][]. For information about the
 latest versions, see the [Release notes][].
