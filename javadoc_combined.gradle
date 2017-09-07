@@ -10,7 +10,7 @@ class CombinedJavadocPlugin implements Plugin<Project> {
         String sdkDirectory = getSdkDirectory(libraryModules)
         project.task(TASK_NAME, type: Javadoc) {
           description = "Generates combined Javadoc."
-          title = "Android Bittrex Api library"
+          title = "BittrexApi library"
           source = libraryModules.generateJavadoc.source
           classpath = project.files(libraryModules.generateJavadoc.classpath)
           destinationDir = project.file("$project.buildDir/docs/javadoc")
@@ -37,7 +37,7 @@ class CombinedJavadocPlugin implements Plugin<Project> {
   }
 
   // Returns Android library modules that declare a generateJavadoc task.
-  private Set<Project> getLibraryModules(Project project) {
+  private static Set<Project> getLibraryModules(Project project) {
     project.subprojects.findAll {
       it.plugins.findPlugin("com.android.library") &&
       it.tasks.findByName("generateJavadoc")
@@ -45,9 +45,9 @@ class CombinedJavadocPlugin implements Plugin<Project> {
   }
 
   // Returns the Android SDK directory given a set of Android library modules.
-  private String getSdkDirectory(Set<Project> libraryModules) {
+  private static String getSdkDirectory(Set<Project> libraryModules) {
     // We can retrieve the Android SDK directory from any module.
-    return libraryModules.iterator().next().android.sdkDirectory
+    return (++libraryModules.iterator()).android.sdkDirectory
   }
 
 }

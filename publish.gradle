@@ -5,5 +5,5 @@ publish {
     repoName = "bittrexapi"
     publishVersion = project.ext.versionName
     desc = project.ext.releaseDescription
-    website = 'https://github.com/CoryCharlton/Android-Bittrex-Api'
+    website = 'https://github.com/CoryCharlton/BittrexApi'
 }
