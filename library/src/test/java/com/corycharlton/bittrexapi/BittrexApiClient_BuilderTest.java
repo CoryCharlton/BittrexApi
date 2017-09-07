@@ -1,10 +1,14 @@
 package com.corycharlton.bittrexapi;
 
+import android.support.annotation.NonNull;
+
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
 
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+
+import java.util.concurrent.Executor;
 
 import static org.junit.Assert.*;
 
@@ -28,24 +32,6 @@ public class BittrexApiClient_BuilderTest {
         public void it_should_not_throw_exception_if_required_parameters_are_set() {
             assertNotNull(buildValidBuilder().build());
         }
-
-        /*
-        @Test(expected = IllegalStateException.class)
-        public void it_should_throw_exception_if_key_is_not_set() {
-            final BittrexApiClient.Builder builder = buildValidBuilder();
-
-            builder.key = null;
-            builder.build();
-        }
-
-        @Test(expected = IllegalStateException.class)
-        public void it_should_throw_exception_if_secret_is_not_set() {
-            final BittrexApiClient.Builder builder = buildValidBuilder();
-
-            builder.secret = null;
-            builder.build();
-        }
-        */
     }
 
     public static class When_downloader_is_called {
@@ -59,7 +45,24 @@ public class BittrexApiClient_BuilderTest {
             new BittrexApiClient.Builder().downloader(null);
         }
     }
-    
+
+    public static class When_executor_is_called {
+        @Test()
+        public void it_should_not_throw_exception_if_executor_is_valid() {
+            assertNotNull(new BittrexApiClient.Builder().executor(new Executor() {
+                @Override
+                public void execute(@NonNull Runnable runnable) {
+
+                }
+            }));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void it_should_throw_exception_if_executor_is_null() {
+            new BittrexApiClient.Builder().executor(null);
+        }
+    }
+
     public static class When_key_is_called {
         @Test()
         public void it_should_not_throw_exception_if_key_is_valid() {

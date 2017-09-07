@@ -19,6 +19,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -39,11 +40,13 @@ public class BittrexApiClient {
     public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
 
     private final Downloader _downloader;
+    private final Executor _executor;
     private final String _key;
     private final String _secret;
 
     private BittrexApiClient(@NonNull Builder builder) {
         _downloader = builder.downloader;
+        _executor = builder.executor;
         _key = builder.key;
         _secret = builder.secret;
     }
@@ -156,6 +159,7 @@ public class BittrexApiClient {
     public static final class Builder {
 
         private Downloader downloader;
+        private Executor executor;
         private String key;
         private String secret;
 
@@ -173,7 +177,11 @@ public class BittrexApiClient {
         @NonNull
         public BittrexApiClient build() {
             if (downloader == null) {
-                this.downloader = new UrlConnectionDownloader();
+                downloader = new UrlConnectionDownloader();
+            }
+
+            if (executor == null) {
+                executor = AsyncTask.THREAD_POOL_EXECUTOR;
             }
 
             return new BittrexApiClient(this);
@@ -190,6 +198,20 @@ public class BittrexApiClient {
             isValidState("downloader", this.downloader == null, "Downloader already set.");
 
             this.downloader = downloader;
+
+            return this;
+        }
+
+        /**
+         * Sets the {@link Executor} used to execute asynchronous calls.
+         * @param executor The {@link Executor} used to execute asynchronous calls
+         * @return This {@link Builder} instance for method chaining
+         */
+        public Builder executor(@NonNull Executor executor) {
+            isNotNull("executor", executor, "Executor must not be null.");
+            isValidState("executor", this.executor == null, "Executor already set.");
+
+            this.executor = executor;
 
             return this;
         }
