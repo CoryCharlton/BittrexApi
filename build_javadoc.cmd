@@ -1,1 +1,1 @@
-@gradlew generateCombinedJavadoc
+@gradlew clean build generateCombinedJavadoc

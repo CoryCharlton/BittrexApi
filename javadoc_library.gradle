@@ -5,7 +5,7 @@ android.libraryVariants.all { variant ->
     }
     task("generateJavadoc", type: Javadoc) {
         description = "Generates Javadoc for the ${javadocTitle}."
-        title = "Android Bittrex Api library ${javadocTitle}"
+        title = "BittrexApi library ${javadocTitle}"
         source = variant.javaCompile.source
         classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
         options {

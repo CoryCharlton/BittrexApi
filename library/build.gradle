@@ -40,7 +40,7 @@ dependencies {
 }
 
 ext {
-    javadocTitle = 'Core module'
+    javadocTitle = ''
 }
 apply from: '../javadoc_library.gradle'
 

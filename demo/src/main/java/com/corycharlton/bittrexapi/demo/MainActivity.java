@@ -7,10 +7,19 @@ import android.util.Log;
 
 import com.corycharlton.bittrexapi.BittrexApiClient;
 import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
+import com.corycharlton.bittrexapi.Callback;
 import com.corycharlton.bittrexapi.demo.settings.ApplicationSettings;
 import com.corycharlton.bittrexapi.extension.okhttp.OkHttpDownloader;
+import com.corycharlton.bittrexapi.request.GetBalanceRequest;
+import com.corycharlton.bittrexapi.request.GetBalancesRequest;
+import com.corycharlton.bittrexapi.request.GetCurrenciesRequest;
+import com.corycharlton.bittrexapi.request.GetDepositAddressRequest;
+import com.corycharlton.bittrexapi.request.Request;
 import com.corycharlton.bittrexapi.response.CancelOrderResponse;
+import com.corycharlton.bittrexapi.response.GetBalanceResponse;
+import com.corycharlton.bittrexapi.response.GetBalancesResponse;
 import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
+import com.corycharlton.bittrexapi.response.GetDepositAddressResponse;
 import com.corycharlton.bittrexapi.response.GetOpenOrdersResponse;
 import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
 import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
@@ -28,19 +37,27 @@ public class MainActivity extends AppCompatActivity {
 
         ApplicationSettings.initialize(this);
 
-        // NOTE: This is a hack while developing the library. Please never do this in a real application.
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
-
         try {
             final BittrexApiClient client = new BittrexApiClient.Builder()
-                    //.downloader(new OkHttpDownloader())
+                    .downloader(new OkHttpDownloader())
                     .key(ApplicationSettings.instance().getKey())
                     .secret(ApplicationSettings.instance().getSecret())
                     .build();
 
-            GetCurrenciesResponse response = client.getCurrencies();
+            // TODO: Test the other requests beyond this one...
+            client.executeAsync(new GetCurrenciesRequest(), new Callback<GetCurrenciesResponse>() {
+                @Override
+                public void onFailure(Request<GetCurrenciesResponse> request, IOException exception) {
+                    Log.e(BittrexApiLibraryInfo.TAG, "*** onFailure", exception);
+                }
 
-            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint... " + response.toString());
+                @Override
+                public void onResponse(Request<GetCurrenciesResponse> request, GetCurrenciesResponse response) {
+                    Log.e(BittrexApiLibraryInfo.TAG, "*** onResponse: " + response.toString());
+                }
+            });
+
+            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint... ");
 
             /*
             GetBalanceResponse response1 = client.getBalance("BTC");
@@ -68,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             WithdrawResponse response3 = client.withdraw("BTC", 0.004, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
 
             */
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(BittrexApiLibraryInfo.TAG, e.toString(), e);
         }
     }
