@@ -3,11 +3,13 @@ package com.corycharlton.bittrexapi.demo.activities;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.corycharlton.bittrexapi.BittrexApiClient;
 import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
-import com.corycharlton.bittrexapi.Callback;
 import com.corycharlton.bittrexapi.demo.R;
+import com.corycharlton.bittrexapi.demo.ToastCallback;
 import com.corycharlton.bittrexapi.demo.settings.ApplicationSettings;
 import com.corycharlton.bittrexapi.extension.okhttp.OkHttpDownloader;
 import com.corycharlton.bittrexapi.request.GetCurrenciesRequest;
@@ -34,9 +36,11 @@ public class MainActivity extends Activity {
                     .build();
 
             // TODO: Test the other requests beyond this one...
-            client.executeAsync(new GetCurrenciesRequest(), new Callback<GetCurrenciesResponse>() {
+            client.executeAsync(new GetCurrenciesRequest(), new ToastCallback<GetCurrenciesResponse>(this) {
                 @Override
                 public void onFailure(Request<GetCurrenciesResponse> request, IOException exception) {
+                    super.onFailure(request, exception);
+
                     Log.e(BittrexApiLibraryInfo.TAG, "*** onFailure", exception);
                 }
 
@@ -94,5 +98,26 @@ public class MainActivity extends Activity {
     @Override
     protected String getTag() {
         return TAG;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final int itemId = item.getItemId();
+
+        switch (itemId) {
+            case R.id.action_authentication:
+                AuthenticationActivity.startActivity(this);
+
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

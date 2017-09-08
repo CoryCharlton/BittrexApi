@@ -42,11 +42,7 @@ public class AuthenticationActivity extends Activity implements View.OnClickList
 
         switch (viewId) {
             case R.id.cancel_button:
-                if (!ApplicationSettings.instance().isAuthenticationConfigured()) {
-                    System.exit(0);
-                } else {
-                    finish();
-                }
+                finish();
 
                 break;
             case R.id.ok_button:
