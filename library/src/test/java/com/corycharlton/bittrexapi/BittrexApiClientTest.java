@@ -18,7 +18,6 @@ import com.corycharlton.bittrexapi.model.OrderHistory;
 import com.corycharlton.bittrexapi.model.Ticker;
 import com.corycharlton.bittrexapi.model.Uuid;
 import com.corycharlton.bittrexapi.model.Withdrawal;
-import com.corycharlton.bittrexapi.internal.util.StringUtils;
 import com.corycharlton.bittrexapi.request.CancelOrderRequest;
 import com.corycharlton.bittrexapi.request.GetBalanceRequest;
 import com.corycharlton.bittrexapi.request.GetBalancesRequest;
@@ -37,8 +36,28 @@ import com.corycharlton.bittrexapi.request.GetTickerRequest;
 import com.corycharlton.bittrexapi.request.GetWithdrawalHistoryRequest;
 import com.corycharlton.bittrexapi.request.PlaceBuyLimitOrderRequest;
 import com.corycharlton.bittrexapi.request.PlaceSellLimitOrderRequest;
+import com.corycharlton.bittrexapi.request.Request;
 import com.corycharlton.bittrexapi.request.WithdrawRequest;
-import com.corycharlton.bittrexapi.response.*;
+import com.corycharlton.bittrexapi.response.CancelOrderResponse;
+import com.corycharlton.bittrexapi.response.GetBalanceResponse;
+import com.corycharlton.bittrexapi.response.GetBalancesResponse;
+import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
+import com.corycharlton.bittrexapi.response.GetDepositAddressResponse;
+import com.corycharlton.bittrexapi.response.GetDepositHistoryResponse;
+import com.corycharlton.bittrexapi.response.GetMarketHistoryResponse;
+import com.corycharlton.bittrexapi.response.GetMarketSummariesResponse;
+import com.corycharlton.bittrexapi.response.GetMarketSummaryResponse;
+import com.corycharlton.bittrexapi.response.GetMarketsResponse;
+import com.corycharlton.bittrexapi.response.GetOpenOrdersResponse;
+import com.corycharlton.bittrexapi.response.GetOrderBookResponse;
+import com.corycharlton.bittrexapi.response.GetOrderHistoryResponse;
+import com.corycharlton.bittrexapi.response.GetOrderResponse;
+import com.corycharlton.bittrexapi.response.GetTickerResponse;
+import com.corycharlton.bittrexapi.response.GetWithdrawalHistoryResponse;
+import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
+import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
+import com.corycharlton.bittrexapi.response.Response;
+import com.corycharlton.bittrexapi.response.WithdrawResponse;
 
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -49,7 +68,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Enclosed.class)
 @SuppressWarnings("ConstantConditions")
@@ -514,6 +537,53 @@ public class BittrexApiClientTest {
             assertNotNull(item);
 
             assertEquals("57aac6c3-197f-45e0-af29-cd650cc5dea8", item.uuid().toString());
+        }
+    }
+
+    /* java.lang.RuntimeException: Method execute in android.os.AsyncTask not mocked. See http://g.co/androidstudio/not-mocked for details.
+    // Could test it in the instrumented tests but spinning up the emulator during build is slow
+    public static class When_executeAsync_is_called {
+
+        @Test()
+        public void it_should_execute_asynchronously() {
+            final AtomicBoolean hasRun = new AtomicBoolean();
+            final MockCallback<CancelOrderResponse> callback = new MockCallback<>();
+            final BittrexApiClient client = new BittrexApiClient.Builder()
+                    .downloader(new MockDownloader())
+                    .executor(new Executor() {
+                        @Override
+                        public void execute(@NonNull Runnable runnable) {
+                            runnable.run();
+                            hasRun.set(true);
+                        }
+                    })
+                    .key(key)
+                    .secret(secret)
+                    .build();
+
+            client.executeAsync(new CancelOrderRequest(UUID.randomUUID()), callback);
+
+            assertNotNull(callback.response);
+            assertTrue(callback.response.success());
+        }
+    }
+    */
+
+    static final class MockCallback<T extends Response> implements Callback<T> {
+        IOException exception;
+        boolean hasRun;
+        T response;
+
+        @Override
+        public void onFailure(Request<T> request, IOException e) {
+            this.exception = e;
+            this.hasRun = true;
+        }
+
+        @Override
+        public void onResponse(Request<T> request, T response) {
+            this.hasRun = true;
+            this.response = response;
         }
     }
 

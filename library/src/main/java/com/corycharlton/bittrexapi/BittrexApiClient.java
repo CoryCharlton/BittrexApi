@@ -108,6 +108,8 @@ public class BittrexApiClient {
      */
     @WorkerThread
     public <T extends Response> T execute(@NonNull Request<T> request) throws IOException {
+        isNotNull("request", request);
+
         final Downloader.Request downloaderRequest = buildDownloaderRequest(request);
         final String response = _downloader.execute(downloaderRequest).bodyString();
 
@@ -121,9 +123,10 @@ public class BittrexApiClient {
      * @param <T> The {@link Response} returned by the request
      */
     @UiThread
-    //TODO: Unit test this...
     public <T extends Response> void executeAsync(@NonNull Request<T> request, Callback<T> callback) {
-        new ExecuteAsyncTask<>(request, callback).execute();
+        isNotNull("request", request);
+
+        new ExecuteAsyncTask<>(request, callback).executeOnExecutor(_executor);
     }
 
     private String signUrl(@NonNull String url) {
