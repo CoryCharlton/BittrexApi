@@ -1,4 +1,5 @@
 com.corycharlton.bittrexapi
 com.corycharlton.bittrexapi.extension.okhttp
 com.corycharlton.bittrexapi.model
+com.corycharlton.bittrexapi.request
 com.corycharlton.bittrexapi.response

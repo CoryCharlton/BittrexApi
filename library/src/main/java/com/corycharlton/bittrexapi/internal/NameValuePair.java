@@ -1,10 +1,12 @@
 package com.corycharlton.bittrexapi.internal;
 
+import android.support.annotation.NonNull;
+
 public class NameValuePair {
     private final String _name;
     private final String _value;
 
-    public NameValuePair(String name, String value) {
+    public NameValuePair(@NonNull String name, @NonNull String value) {
         _name = name.trim();
         _value = value.trim();
     }

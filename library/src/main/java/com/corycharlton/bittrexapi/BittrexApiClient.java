@@ -1,43 +1,32 @@
 package com.corycharlton.bittrexapi;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 
 import com.corycharlton.bittrexapi.internal.NameValuePair;
 import com.corycharlton.bittrexapi.internal.constants.HttpHeader;
 import com.corycharlton.bittrexapi.internal.gson.Gson;
 import com.corycharlton.bittrexapi.internal.util.Ensure;
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
-import com.corycharlton.bittrexapi.response.CancelOrderResponse;
-import com.corycharlton.bittrexapi.response.GetBalanceResponse;
-import com.corycharlton.bittrexapi.response.GetBalancesResponse;
-import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
-import com.corycharlton.bittrexapi.response.GetDepositAddressResponse;
-import com.corycharlton.bittrexapi.response.GetDepositHistoryResponse;
-import com.corycharlton.bittrexapi.response.GetMarketHistoryResponse;
-import com.corycharlton.bittrexapi.response.GetMarketSummariesResponse;
-import com.corycharlton.bittrexapi.response.GetMarketSummaryResponse;
-import com.corycharlton.bittrexapi.response.GetMarketsResponse;
-import com.corycharlton.bittrexapi.response.GetOpenOrdersResponse;
-import com.corycharlton.bittrexapi.response.GetOrderBookResponse;
-import com.corycharlton.bittrexapi.response.GetOrderHistoryResponse;
-import com.corycharlton.bittrexapi.response.GetOrderResponse;
-import com.corycharlton.bittrexapi.response.GetTickerResponse;
-import com.corycharlton.bittrexapi.response.GetWithdrawalHistoryResponse;
-import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
-import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
-import com.corycharlton.bittrexapi.response.WithdrawResponse;
+import com.corycharlton.bittrexapi.request.Request;
+import com.corycharlton.bittrexapi.response.Response;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
+import java.util.concurrent.Executor;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import static com.corycharlton.bittrexapi.internal.util.Ensure.*;
+import static com.corycharlton.bittrexapi.internal.util.Ensure.isNotNull;
+import static com.corycharlton.bittrexapi.internal.util.Ensure.isNotNullOrWhitespace;
+import static com.corycharlton.bittrexapi.internal.util.Ensure.isValidState;
 
 /**
  * An implementation of the Bittrex Api
@@ -50,51 +39,27 @@ public class BittrexApiClient {
     public static final int DEFAULT_WRITE_TIMEOUT_MILLIS = 20 * 1000; // 20s
     public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
 
-    static final String URL_CANCELORDER = "https://bittrex.com/api/v1.1/market/cancel";
-    static final String URL_GETBALANCE = "https://bittrex.com/api/v1.1/account/getbalance";
-    static final String URL_GETBALANCES = "https://bittrex.com/api/v1.1/account/getbalances";
-    static final String URL_GETCURRENCIES = "https://bittrex.com/api/v1.1/public/getcurrencies";
-    static final String URL_GETDEPOSITADDRESS = "https://bittrex.com/api/v1.1/account/getdepositaddress";
-    static final String URL_GETDEPOSITHISTORY = "https://bittrex.com/api/v1.1/account/getdeposithistory";
-    static final String URL_GETMARKETHISTORY = "https://bittrex.com/api/v1.1/public/getmarkethistory";
-    static final String URL_GETMARKETS = "https://bittrex.com/api/v1.1/public/getmarkets";
-    static final String URL_GETMARKETSUMMARIES = "https://bittrex.com/api/v1.1/public/getmarketsummaries";
-    static final String URL_GETMARKETSUMMARY = "https://bittrex.com/api/v1.1/public/getmarketsummary";
-    static final String URL_GETOPENORDERS = "https://bittrex.com/api/v1.1/market/getopenorders";
-    static final String URL_GETORDER = "https://bittrex.com/api/v1.1/account/getorder";
-    static final String URL_GETORDERBOOK = "https://bittrex.com/api/v1.1/public/getorderbook";
-    static final String URL_GETORDERHISTORY = "https://bittrex.com/api/v1.1/account/getorderhistory";
-    static final String URL_GETTICKER = "https://bittrex.com/api/v1.1/public/getticker";
-    static final String URL_GETWITHDRAWALHISTORY = "https://bittrex.com/api/v1.1/account/getwithdrawalhistory";
-    static final String URL_PLACEBUYLIMITORDER = "https://bittrex.com/api/v1.1/market/buylimit";
-    static final String URL_PLACESELLLIMITORDER = "https://bittrex.com/api/v1.1/market/selllimit";
-    static final String URL_WITHDRAW = "https://bittrex.com/api/v1.1/account/withdraw";
-
     private final Downloader _downloader;
+    private final Executor _executor;
     private final String _key;
     private final String _secret;
 
     private BittrexApiClient(@NonNull Builder builder) {
         _downloader = builder.downloader;
+        _executor = builder.executor;
         _key = builder.key;
         _secret = builder.secret;
     }
 
-    private Downloader.Request buildRequest(@NonNull String url) {
-        return buildRequest(url, false);
-    }
+    private Downloader.Request buildDownloaderRequest(@NonNull Request request) {
+        final ArrayList<NameValuePair> parameters = new ArrayList<>();
+        final boolean requiresAuthentication = request.requiresAuthentication();
+        final String url = request.url();
 
-    private Downloader.Request buildRequest(@NonNull String url, boolean requiresAuthentication) {
-        return buildRequest(url, null, requiresAuthentication);
-    }
+        @SuppressWarnings("unchecked") final List<NameValuePair> requestParameters = request.parameters();
 
-    private Downloader.Request buildRequest(@NonNull String url, ArrayList<NameValuePair> parameters) {
-        return buildRequest(url, parameters, false);
-    }
-
-    private Downloader.Request buildRequest(@NonNull String url, ArrayList<NameValuePair> parameters, boolean requiresAuthentication) {
-        if (parameters == null) {
-            parameters = new ArrayList<>();
+        for (int i = 0; i < requestParameters.size(); i++) {
+            parameters.add(requestParameters.get(i));
         }
 
         boolean firstParameterAdded = url.contains("?");
@@ -135,359 +100,33 @@ public class BittrexApiClient {
     }
 
     /**
-     * Used to cancel a buy or sell order.
-     * @param uuid uuid of buy or sell order
-     * @return A {@link CancelOrderResponse} that represents the status of the cancel request
+     * Executes a {@link Request}
+     * @param request The {@link Request} to execute
+     * @param <T> The {@link Response} returned by the request
+     * @return A {@link Response} that contains the result of the request
      * @throws IOException If there is a network error
      */
-    public CancelOrderResponse cancelOrder(@NonNull UUID uuid) throws IOException {
-        Ensure.isNotNull("uuid", uuid);
+    @WorkerThread
+    public <T extends Response> T execute(@NonNull Request<T> request) throws IOException {
+        isNotNull("request", request);
 
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new NameValuePair("uuid", uuid.toString()));
+        final Downloader.Request downloaderRequest = buildDownloaderRequest(request);
+        final String response = _downloader.execute(downloaderRequest).bodyString();
 
-        final Downloader.Request request = buildRequest(URL_CANCELORDER, parameters, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, CancelOrderResponse.class);
+        return Gson.fromJson(response, request.responseType());
     }
 
     /**
-     * Used to retrieve the balance from your account for a specific currency.
-     * @param currency string literal for the currency (ex: LTC)
-     * @return A {@link GetBalanceResponse} that represents the balance for the requested currency
-     * @throws IOException If there is a network error
-     * @see GetBalanceResponse
+     * Asynchronously executes a {@link Request}
+     * @param request The {@link Request} to execute
+     * @param callback A {@link Callback} that will be executed when the {@link Request} completes
+     * @param <T> The {@link Response} returned by the request
      */
-    public GetBalanceResponse getBalance(@NonNull String currency) throws IOException {
-        Ensure.isNotNullOrWhitespace("currency", currency);
+    @UiThread
+    public <T extends Response> void executeAsync(@NonNull Request<T> request, Callback<T> callback) {
+        isNotNull("request", request);
 
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new NameValuePair("currency", currency));
-
-        final Downloader.Request request = buildRequest(URL_GETBALANCE, parameters, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetBalanceResponse.class);
-    }
-
-    /**
-     * Used to retrieve all balances from your account.
-     * @return A {@link GetBalanceResponse} that represents the list of balances
-     * @throws IOException If there is a network error
-     * @see GetBalancesResponse
-     */
-    public GetBalancesResponse getBalances() throws IOException {
-        final Downloader.Request request = buildRequest(URL_GETBALANCES, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetBalancesResponse.class);
-    }
-
-    /**
-     * Used to get all supported currencies at Bittrex along with other meta data.
-     * @return A {@link GetCurrenciesResponse} that represents the list of currencies
-     * @throws IOException If there is a network error
-     */
-    public GetCurrenciesResponse getCurrencies() throws IOException {
-        final Downloader.Request request = buildRequest(URL_GETCURRENCIES);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetCurrenciesResponse.class);
-    }
-
-    /**
-     * Used to retrieve or generate an address for a specific currency. If one does not exist, the call will fail and return ADDRESS_GENERATING until one is available.
-     * @param currency A string literal for the currency (ie. BTC)
-     * @return A {@link GetDepositAddressResponse} that represents the deposit address for the requested currency
-     * @throws IOException If there is a network error
-     */
-    public GetDepositAddressResponse getDepositAddress(@NonNull String currency) throws IOException {
-        Ensure.isNotNullOrWhitespace("currency", currency);
-
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new NameValuePair("currency", currency));
-
-        final Downloader.Request request = buildRequest(URL_GETDEPOSITADDRESS, parameters, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetDepositAddressResponse.class);
-    }
-
-    /**
-     * Used to retrieve your deposit history.
-     * @return A {@link GetDepositHistoryResponse} that represents your deposit history for all currencies
-     * @throws IOException If there is a network error
-     */
-    public GetDepositHistoryResponse getDepositHistory() throws IOException {
-        return getDepositHistory(null);
-    }
-
-    /**
-     * Used to retrieve your deposit history.
-     * @param currency An optional string literal for the currency (ie. BTC). If omitted, will return for all currencies
-     * @return A {@link GetDepositHistoryResponse} that represents your deposit history for the requested currency
-     * @throws IOException If there is a network error
-     */
-    public GetDepositHistoryResponse getDepositHistory(String currency) throws IOException {
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-
-        if (!StringUtils.isNullOrWhiteSpace(currency)) {
-            parameters.add(new NameValuePair("currency", currency));
-        }
-
-        final Downloader.Request request = buildRequest(URL_GETDEPOSITHISTORY, parameters, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetDepositHistoryResponse.class);
-    }
-
-    /**
-     * Used to retrieve the latest trades that have occurred for a specific market.
-     * @param market A string literal for the market (ex: BTC-LTC)
-     * @return A {@link GetMarketHistoryResponse} that represents the latest trades that have occurred for the requested market
-     * @throws IOException If there is a network error
-     */
-    public GetMarketHistoryResponse getMarketHistory(@NonNull String market) throws IOException {
-        Ensure.isNotNullOrWhitespace("market", market);
-
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new NameValuePair("market", market));
-
-        final Downloader.Request request = buildRequest(URL_GETMARKETHISTORY, parameters);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetMarketHistoryResponse.class);
-    }
-
-    /**
-     * Used to get the open and available trading markets at Bittrex along with other meta data.
-     * @return A {@link GetMarketsResponse} that represents the available trading markets
-     * @throws IOException If there is a network error
-     */
-    public GetMarketsResponse getMarkets() throws IOException {
-        final Downloader.Request request = buildRequest(URL_GETMARKETS);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetMarketsResponse.class);
-    }
-
-    /**
-     * Used to get the last 24 hour summary of all active exchanges.
-     * @return A {@link GetMarketSummariesResponse} that represents the last 24 hour summary of all active exchanges
-     * @throws IOException If there is a network error
-     */
-    public GetMarketSummariesResponse getMarketSummaries() throws IOException {
-        final Downloader.Request request = buildRequest(URL_GETMARKETSUMMARIES);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetMarketSummariesResponse.class);
-    }
-
-    /**
-     * Used to get the last 24 hour summary for a specific exchange.
-     * @param market A string literal for the market (ex: BTC-LTC)
-     * @return A {@link GetMarketSummaryResponse} that represents the last 24 hour summary for the requested exchange
-     * @throws IOException If there is a network error
-     */
-    public GetMarketSummaryResponse getMarketSummary(@NonNull String market) throws IOException {
-        Ensure.isNotNullOrWhitespace("market", market);
-
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new NameValuePair("market", market));
-
-        final Downloader.Request request = buildRequest(URL_GETMARKETSUMMARY, parameters);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetMarketSummaryResponse.class);
-    }
-
-    /**
-     * Get all orders that you currently have opened.
-     * @return A {@link GetOpenOrdersResponse} that represents the list of open orders
-     * @throws IOException If there is a network error
-     */
-    public GetOpenOrdersResponse getOpenOrders() throws IOException {
-        return getOpenOrders(null);
-    }
-
-    /**
-     * Get all orders that you currently have opened.
-     * @param market An optional string literal for the market (ie. BTC-LTC)
-     * @return A {@link GetOpenOrdersResponse} that represents the list of open orders
-     * @throws IOException If there is a network error
-     */
-    public GetOpenOrdersResponse getOpenOrders(String market) throws IOException {
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-
-        if (!StringUtils.isNullOrWhiteSpace(market)) {
-            parameters.add(new NameValuePair("market", market));
-        }
-
-        final Downloader.Request request = buildRequest(URL_GETOPENORDERS, parameters, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetOpenOrdersResponse.class);
-    }
-
-    /**
-     * Used to retrieve a single order by uuid.
-     * @param uuid The uuid of the buy or sell order
-     * @return A {@link GetOrderResponse} that represents the requested order details
-     * @throws IOException If there is a network error
-     */
-    public GetOrderResponse getOrder(@NonNull UUID uuid) throws IOException {
-        Ensure.isNotNull("uuid", uuid);
-
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new NameValuePair("uuid", uuid.toString()));
-
-        final Downloader.Request request = buildRequest(URL_GETORDER, parameters, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetOrderResponse.class);
-    }
-
-    /**
-     * Used to retrieve the order book for a given market.
-     * @param market A string literal for the market (ex: BTC-LTC
-     * @return A {@link GetOrderBookResponse} that represents the order book for the requested market
-     * @throws IOException If there is a network error
-     */
-    // TODO: Expose the 'type' parameter?
-    public GetOrderBookResponse getOrderBook(@NonNull String market) throws IOException {
-        Ensure.isNotNullOrWhitespace("market", market);
-
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new NameValuePair("market", market));
-        parameters.add(new NameValuePair("type", "both"));
-
-        final Downloader.Request request = buildRequest(URL_GETORDERBOOK, parameters);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetOrderBookResponse.class);
-    }
-
-    /**
-     * Used to retrieve your order history for all markets.
-     * @return A {@link GetOrderHistoryResponse} that represents your order history
-     * @throws IOException If there is a network error
-     */
-    public GetOrderHistoryResponse getOrderHistory() throws IOException {
-        return getOrderHistory(null);
-    }
-
-    /**
-     * Used to retrieve your order history.
-     * @param market An optional string literal for the market (ie. BTC-LTC). If omitted, will return for all markets
-     * @return A {@link GetOrderHistoryResponse} that represents your order history
-     * @throws IOException If there is a network error
-     */
-    public GetOrderHistoryResponse getOrderHistory(String market) throws IOException {
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-
-        if (!StringUtils.isNullOrWhiteSpace(market)) {
-            parameters.add(new NameValuePair("market", market));
-        }
-
-        final Downloader.Request request = buildRequest(URL_GETORDERHISTORY, parameters, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetOrderHistoryResponse.class);
-    }
-
-    /**
-     * Used to get the current tick values for a market.
-     * @param market A string literal for the market (ex: BTC-LTC)
-     * @return A {@link GetTickerResponse} that represents the current tick values for the requested market
-     * @throws IOException If there is a network error
-     */
-    public GetTickerResponse getTicker(@NonNull String market) throws IOException {
-        Ensure.isNotNullOrWhitespace("market", market);
-
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new NameValuePair("market", market));
-
-        final Downloader.Request request = buildRequest(URL_GETTICKER, parameters);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetTickerResponse.class);
-    }
-
-    /**
-     * Used to retrieve your withdrawal history.
-     * @return A {@link GetWithdrawalHistoryResponse} that represents your withdrawal history
-     * @throws IOException If there is a network error
-     */
-    public GetWithdrawalHistoryResponse getWithdrawalHistory() throws IOException {
-        return getWithdrawalHistory(null);
-    }
-
-    /**
-     * Used to retrieve your withdrawal history.
-     * @param currency An optional string literal for the currency (ie. BTC). If omitted, will return for all currencies
-     * @return A {@link GetWithdrawalHistoryResponse} that represents your withdrawal history
-     * @throws IOException If there is a network error
-     */
-    public GetWithdrawalHistoryResponse getWithdrawalHistory(String currency) throws IOException {
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-
-        if (!StringUtils.isNullOrWhiteSpace(currency)) {
-            parameters.add(new NameValuePair("currency", currency));
-        }
-
-        final Downloader.Request request = buildRequest(URL_GETWITHDRAWALHISTORY, parameters, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, GetWithdrawalHistoryResponse.class);
-    }
-
-    /**
-     * Used to place a limit buy order in a specific market. Make sure you have the proper permissions set on your API keys for this call to work
-     * @param market A string literal for the market (ex: BTC-LTC)
-     * @param quantity The amount to purchase
-     * @param rate The rate at which to place the order
-     * @return A {@link PlaceBuyLimitOrderResponse}
-     * @throws IOException If there is a network error
-     */
-    public PlaceBuyLimitOrderResponse placeBuyLimitOrder(@NonNull String market, double quantity, double rate) throws IOException {
-        Ensure.isNotNullOrWhitespace("market", market);
-        Ensure.isTrue("quantity", quantity > 0.0);
-        Ensure.isTrue("rate", rate > 0.0);
-
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new NameValuePair("market", market));
-        parameters.add(new NameValuePair("quantity", Double.toString(quantity)));
-        parameters.add(new NameValuePair("rate", Double.toString(rate)));
-
-        final Downloader.Request request = buildRequest(URL_PLACEBUYLIMITORDER, parameters, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, PlaceBuyLimitOrderResponse.class);
-    }
-
-    /**
-     * Used to place a limit sell order in a specific market. Make sure you have the proper permissions set on your API keys for this call to work
-     * @param market A string literal for the market (ex: BTC-LTC)
-     * @param quantity The amount to purchase
-     * @param rate The rate at which to place the order
-     * @return A {@link PlaceSellLimitOrderResponse}
-     * @throws IOException If there is a network error
-     */
-    public PlaceSellLimitOrderResponse placeSellLimitOrder(@NonNull String market, double quantity, double rate) throws IOException {
-        Ensure.isNotNullOrWhitespace("market", market);
-        Ensure.isTrue("quantity", quantity > 0.0);
-        Ensure.isTrue("rate", rate > 0.0);
-
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new NameValuePair("market", market));
-        parameters.add(new NameValuePair("quantity", Double.toString(quantity)));
-        parameters.add(new NameValuePair("rate", Double.toString(rate)));
-
-        final Downloader.Request request = buildRequest(URL_PLACESELLLIMITORDER, parameters, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, PlaceSellLimitOrderResponse.class);
+        new ExecuteAsyncTask<>(request, callback).executeOnExecutor(_executor);
     }
 
     private String signUrl(@NonNull String url) {
@@ -521,50 +160,10 @@ public class BittrexApiClient {
         return digest;
     }
 
-    /**
-     * Used to withdraw funds from your account.
-     * @param currency A string literal for the currency (ie. BTC)
-     * @param quantity The quantity of coins to withdraw
-     * @param address The address where to send the funds
-     * @return A {@link WithdrawResponse}
-     * @throws IOException If there is a network error
-     */
-    public WithdrawResponse withdraw(@NonNull String currency, double quantity, @NonNull String address) throws IOException {
-        return withdraw(currency, quantity, address, null);
-    }
-
-    /**
-     * Used to withdraw funds from your account.
-     * @param currency A string literal for the currency (ie. BTC)
-     * @param quantity The quantity of coins to withdraw
-     * @param address The address where to send the funds
-     * @param paymentId An optional string used for CryptoNotes/BitShareX/Nxt optional field (memo/paymentid)
-     * @return A {@link WithdrawResponse}
-     * @throws IOException If there is a network error
-     */
-    public WithdrawResponse withdraw(@NonNull String currency, double quantity, @NonNull String address, String paymentId) throws IOException {
-        Ensure.isNotNullOrWhitespace("address", address);
-        Ensure.isNotNullOrWhitespace("currency", currency);
-        Ensure.isTrue("quantity", quantity > 0.0);
-
-        final ArrayList<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new NameValuePair("address", address));
-        parameters.add(new NameValuePair("currency", currency));
-        parameters.add(new NameValuePair("quantity", Double.toString(quantity)));
-
-        if (!StringUtils.isNullOrWhiteSpace(paymentId)) {
-            parameters.add(new NameValuePair("paymentid", paymentId));
-        }
-
-        final Downloader.Request request = buildRequest(URL_WITHDRAW, parameters, true);
-        final String response = _downloader.execute(request).bodyString();
-
-        return Gson.fromJson(response, WithdrawResponse.class);
-    }
-
     public static final class Builder {
 
         private Downloader downloader;
+        private Executor executor;
         private String key;
         private String secret;
 
@@ -582,7 +181,11 @@ public class BittrexApiClient {
         @NonNull
         public BittrexApiClient build() {
             if (downloader == null) {
-                this.downloader = new UrlConnectionDownloader();
+                downloader = new UrlConnectionDownloader();
+            }
+
+            if (executor == null) {
+                executor = AsyncTask.THREAD_POOL_EXECUTOR;
             }
 
             return new BittrexApiClient(this);
@@ -599,6 +202,20 @@ public class BittrexApiClient {
             isValidState("downloader", this.downloader == null, "Downloader already set.");
 
             this.downloader = downloader;
+
+            return this;
+        }
+
+        /**
+         * Sets the {@link Executor} used to execute asynchronous calls.
+         * @param executor The {@link Executor} used to execute asynchronous calls
+         * @return This {@link Builder} instance for method chaining
+         */
+        public Builder executor(@NonNull Executor executor) {
+            isNotNull("executor", executor, "Executor must not be null.");
+            isValidState("executor", this.executor == null, "Executor already set.");
+
+            this.executor = executor;
 
             return this;
         }
@@ -629,6 +246,42 @@ public class BittrexApiClient {
             this.secret = secret;
 
             return this;
+        }
+    }
+
+    private final class ExecuteAsyncTask<T extends Response> extends AsyncTask<Void, Void, T> {
+
+        private IOException _backgroundException;
+        private final Callback<T> _callback;
+        private final Request<T> _request;
+
+        public ExecuteAsyncTask(@NonNull Request<T> request, Callback<T> callback) {
+            _callback = callback;
+            _request = request;
+        }
+
+        @Override
+        protected T doInBackground(Void... voids) {
+            try {
+                return BittrexApiClient.this.execute(_request);
+            } catch (IOException e) {
+                _backgroundException = e;
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(T result) {
+            super.onPostExecute(result);
+
+            if (_callback != null) {
+                if (_backgroundException != null) {
+                    _callback.onFailure(_request, _backgroundException);
+                } else {
+                    _callback.onResponse(_request, result);
+                }
+            }
         }
     }
 }
