@@ -19,7 +19,7 @@ public abstract class ToastCallback<T extends Response> implements Callback<T> {
     protected ToastCallback(@NonNull Context context) {
         Ensure.isNotNull("context", context);
 
-        _context = context;
+        _context = context.getApplicationContext();
     }
 
     @CallSuper
@@ -28,6 +28,13 @@ public abstract class ToastCallback<T extends Response> implements Callback<T> {
         Toast.makeText(_context, "Error executing " + request.getClass().getSimpleName() + ": " + e, Toast.LENGTH_LONG).show();
     }
 
+    @CallSuper
     @Override
-    public abstract void onResponse(Request<T> request, T response);
+    public void onResponse(Request<T> request, T response) {
+        if (response == null) {
+            Toast.makeText(_context, "Error executing " + request.getClass().getSimpleName() + ": Empty response returned", Toast.LENGTH_LONG).show();
+        } else if (!response.success()) {
+            Toast.makeText(_context, "Error executing " + request.getClass().getSimpleName() + ": " + response.message(), Toast.LENGTH_LONG).show();
+        }
+    }
 }

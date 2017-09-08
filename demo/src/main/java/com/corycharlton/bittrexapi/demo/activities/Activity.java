@@ -1,10 +1,13 @@
 package com.corycharlton.bittrexapi.demo.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.corycharlton.bittrexapi.demo.utils.Log;
 
@@ -73,6 +76,10 @@ public abstract class Activity extends AppCompatActivity {
     @NonNull
     protected abstract String getTag();
 
+    protected void hideKeyboard(@NonNull View view) {
+        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
     /*
     @CallSuper
     void initToolbar() {
@@ -107,6 +114,10 @@ public abstract class Activity extends AppCompatActivity {
         super.setContentView(layoutResID);
 
         ButterKnife.bind(this);
+    }
+
+    protected void showKeyboard(@NonNull View view) {
+        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
     }
 
     /*

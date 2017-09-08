@@ -12,14 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".activities.MainActivity" />
-
         <activity
             android:name=".activities.AuthenticationActivity"
             android:label="@string/authentication"
-            android:theme="@style/AppTheme.Alert"
-            />
+            android:theme="@style/AppTheme.Alert" />
 
         <activity-alias
             android:name=".LauncherActivity"
@@ -31,6 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
+
+        <activity android:name=".activities.GetBalancesActivity" android:label="@string/balances" />
+        <activity android:name=".activities.GetCurrenciesActivity" android:label="@string/currencies" />
+
     </application>
 
 </manifest>

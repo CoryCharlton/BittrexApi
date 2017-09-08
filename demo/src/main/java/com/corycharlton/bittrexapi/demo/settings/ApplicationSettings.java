@@ -15,6 +15,7 @@ import static com.corycharlton.bittrexapi.internal.util.Ensure.isValidState;
 @SuppressWarnings("WeakerAccess")
 public final class ApplicationSettings extends Settings {
     //TODO: Get default values from resources?
+    public static final String KEY_HIDE_ZERO_BALANCES = "hide_zero_balances";
     public static final String KEY_KEY = "key";
     public static final String KEY_SECRET = "secret";
 
@@ -32,6 +33,9 @@ public final class ApplicationSettings extends Settings {
     }
 
     @NonNull
+    public boolean getHideZeroBalances() { return getBoolean(KEY_HIDE_ZERO_BALANCES, true); }
+
+    @NonNull
     public String getKey() {
         return getString(KEY_KEY, StringUtils.EMPTY);
     }
@@ -43,6 +47,10 @@ public final class ApplicationSettings extends Settings {
 
     public boolean isAuthenticationConfigured() {
         return !StringUtils.isNullOrWhiteSpace(getKey()) && !StringUtils.isNullOrWhiteSpace(getSecret());
+    }
+
+    public void setHideZeroBalances(boolean hideZeroBalances) {
+        putBoolean(KEY_HIDE_ZERO_BALANCES, hideZeroBalances);
     }
 
     public void setKey(@NonNull String key) {

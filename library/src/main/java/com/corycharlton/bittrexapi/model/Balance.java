@@ -4,18 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings("unused")
 public class Balance {
-    /*
-    {
-        "Currency": "BTC",
-        "Balance": 0.01524815,
-        "Available": 0.00111290,
-        "Pending": 0.00000000,
-        "CryptoAddress": "15wAyo1YUwgmEG192hxrF2w4fPzX5jyFXt"
-    }
-    */
 
     @SerializedName("Available") private double _available;
-    @SerializedName("Balance") private double _balance;
+    @SerializedName("Balance") private double _total;
     @SerializedName("CryptoAddress") private String _cryptoAddress;
     @SerializedName("Currency") private String _currency;
     @SerializedName("Pending") private double _pending;
@@ -24,10 +15,6 @@ public class Balance {
 
     public double available() {
         return _available;
-    }
-
-    public double balance() {
-        return _balance;
     }
 
     public String cryptoAddress() {
@@ -40,5 +27,13 @@ public class Balance {
 
     public double pending() {
         return _pending;
+    }
+
+    public double reserved() {
+        return _total - _available;
+    }
+
+    public double total() {
+        return _total;
     }
 }

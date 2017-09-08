@@ -2,85 +2,68 @@ package com.corycharlton.bittrexapi.demo.activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.corycharlton.bittrexapi.BittrexApiClient;
-import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
 import com.corycharlton.bittrexapi.demo.R;
-import com.corycharlton.bittrexapi.demo.ToastCallback;
+import com.corycharlton.bittrexapi.demo.adapters.RequestActivityAdapter;
+import com.corycharlton.bittrexapi.demo.adapters.SelectableAdapter;
+import com.corycharlton.bittrexapi.demo.models.RequestActivity;
 import com.corycharlton.bittrexapi.demo.settings.ApplicationSettings;
-import com.corycharlton.bittrexapi.extension.okhttp.OkHttpDownloader;
-import com.corycharlton.bittrexapi.request.GetCurrenciesRequest;
-import com.corycharlton.bittrexapi.request.Request;
-import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
 
-import java.io.IOException;
+import butterknife.BindView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SelectableAdapter.EventListener {
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    @BindView(R.id.recyclerview) RecyclerView _recyclerView;
+
+    private RequestActivityAdapter _adapter;
+    private LinearLayoutManager _layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.layout_recyclerview);
 
         ApplicationSettings.initialize(this);
 
-        try {
-            final BittrexApiClient client = new BittrexApiClient.Builder()
-                    .downloader(new OkHttpDownloader())
-                    .key(ApplicationSettings.instance().getKey())
-                    .secret(ApplicationSettings.instance().getSecret())
-                    .build();
+        _adapter = new RequestActivityAdapter();
+        _adapter.setEventListener(this);
 
-            // TODO: Test the other requests beyond this one...
-            client.executeAsync(new GetCurrenciesRequest(), new ToastCallback<GetCurrenciesResponse>(this) {
-                @Override
-                public void onFailure(Request<GetCurrenciesResponse> request, IOException exception) {
-                    super.onFailure(request, exception);
+        _layoutManager = new LinearLayoutManager(this);
 
-                    Log.e(BittrexApiLibraryInfo.TAG, "*** onFailure", exception);
-                }
+        _recyclerView.setLayoutManager(_layoutManager);
+        _recyclerView.setAdapter(_adapter);
+        /*
+        GetBalanceResponse response1 = client.getBalance("BTC");
+        GetBalancesResponse response2 = client.getBalances();
+        GetCurrenciesResponse response3 = client.getCurrencies();
+        GetDepositAddressResponse response4 = client.getDepositAddress("BTC");
+        GetDepositHistoryResponse response5 = client.getDepositHistory();
+        GetDepositHistoryResponse response6 = client.getDepositHistory("BTC");
+        GetMarketHistoryResponse response7 = client.getMarketHistory("BTC-LTC");
+        GetMarketsResponse response8 = client.getMarkets();
+        GetMarketSummariesResponse response9 = client.getMarketSummaries();
+        GetMarketSummaryResponse response10 = client.getMarketSummary("BTC-LTC");
+        GetOpenOrdersResponse response11 = client.getOpenOrders();
+        GetOrderResponse response12 = client.getOrder(UUID.fromString("360f7031-e358-4bd0-9efc-2558b66d6157"));
+        GetOrderBookResponse response13 = client.getOrderBook("BTC-LTC");
+        GetOrderHistoryResponse response14 = client.getOrderHistory();
+        GetOrderHistoryResponse response15 = client.getOrderHistory("BTC-SC");
+        GetTickerResponse response16 = client.getTicker("BTC-LTC");
+        GetWithdrawalHistoryResponse response17 = client.getWithdrawalHistory();
+        GetWithdrawalHistoryResponse response18 = client.getWithdrawalHistory("BTC");
 
-                @Override
-                public void onResponse(Request<GetCurrenciesResponse> request, GetCurrenciesResponse response) {
-                    Log.e(BittrexApiLibraryInfo.TAG, "*** onResponse: " + response.toString());
-                }
-            });
+        CancelOrderResponse response19 = client.cancelOrder(UUID.fromString("b45c12ab-eb10-418a-ba4a-4e85b8d7db28"));
+        PlaceBuyLimitOrderResponse response20 = client.placeBuyLimitOrder("BTC-SC", 1000, 0.00000150);
+        PlaceSellLimitOrderResponse response21 = client.placeSellLimitOrder("BTC-SC", 1000, 0.00001930);
+        WithdrawResponse response3 = client.withdraw("BTC", 0.004, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
 
-            Log.v(BittrexApiLibraryInfo.TAG, "Just for a breakpoint... ");
+        */
 
-            /*
-            GetBalanceResponse response1 = client.getBalance("BTC");
-            GetBalancesResponse response2 = client.getBalances();
-            GetCurrenciesResponse response3 = client.getCurrencies();
-            GetDepositAddressResponse response4 = client.getDepositAddress("BTC");
-            GetDepositHistoryResponse response5 = client.getDepositHistory();
-            GetDepositHistoryResponse response6 = client.getDepositHistory("BTC");
-            GetMarketHistoryResponse response7 = client.getMarketHistory("BTC-LTC");
-            GetMarketsResponse response8 = client.getMarkets();
-            GetMarketSummariesResponse response9 = client.getMarketSummaries();
-            GetMarketSummaryResponse response10 = client.getMarketSummary("BTC-LTC");
-            GetOpenOrdersResponse response11 = client.getOpenOrders();
-            GetOrderResponse response12 = client.getOrder(UUID.fromString("360f7031-e358-4bd0-9efc-2558b66d6157"));
-            GetOrderBookResponse response13 = client.getOrderBook("BTC-LTC");
-            GetOrderHistoryResponse response14 = client.getOrderHistory();
-            GetOrderHistoryResponse response15 = client.getOrderHistory("BTC-SC");
-            GetTickerResponse response16 = client.getTicker("BTC-LTC");
-            GetWithdrawalHistoryResponse response17 = client.getWithdrawalHistory();
-            GetWithdrawalHistoryResponse response18 = client.getWithdrawalHistory("BTC");
-
-            CancelOrderResponse response19 = client.cancelOrder(UUID.fromString("b45c12ab-eb10-418a-ba4a-4e85b8d7db28"));
-            PlaceBuyLimitOrderResponse response20 = client.placeBuyLimitOrder("BTC-SC", 1000, 0.00000150);
-            PlaceSellLimitOrderResponse response21 = client.placeSellLimitOrder("BTC-SC", 1000, 0.00001930);
-            WithdrawResponse response3 = client.withdraw("BTC", 0.004, "1HcDQvR5YGx7S5udZL1MigWpgxRzsQRzrb");
-
-            */
-        } catch (Exception e) {
-            Log.e(BittrexApiLibraryInfo.TAG, e.toString(), e);
-        }
 
         if (savedInstanceState == null && !ApplicationSettings.instance().isAuthenticationConfigured()) {
             AuthenticationActivity.startActivity(this);
@@ -108,6 +91,22 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    public void onItemClicked(int position) {
+        final RequestActivity<?> requestActivity = _adapter.getItem(position);
+
+        if (requestActivity.requiresAuthentication() && !ApplicationSettings.instance().isAuthenticationConfigured()) {
+            AuthenticationActivity.startActivity(this);
+        } else {
+            requestActivity.startActivity(this);
+        }
+    }
+
+    @Override
+    public void onItemSelected(int position) {
+
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         final int itemId = item.getItemId();
 
@@ -120,4 +119,6 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
