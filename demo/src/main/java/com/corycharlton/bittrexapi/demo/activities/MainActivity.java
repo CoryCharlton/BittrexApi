@@ -87,6 +87,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
+        // TODO: Enable buttons based on ApplicationSettings.instance().isAuthenticationConfigured()
     }
 
     @NonNull

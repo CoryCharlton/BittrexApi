@@ -21,8 +21,8 @@ public final class ApplicationSettings extends Settings {
     private ApplicationSettings(@NonNull Context context) {
         super(context);
 
-        remove(KEY_KEY, true);
-        remove(KEY_SECRET, true);
+        //remove(KEY_KEY, true);
+        //remove(KEY_SECRET, true);
     }
 
     @NonNull
