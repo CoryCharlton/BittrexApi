@@ -1,2 +1,7 @@
 <resources>
+    <string name="enter_secret">Enter secret</string>
+    <string name="enter_key">Enter key</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="authentication">Authentication</string>
 </resources>

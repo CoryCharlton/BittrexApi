@@ -8,7 +8,9 @@ import android.support.annotation.NonNull;
 
 import com.corycharlton.bittrexapi.internal.util.StringUtils;
 
-import static com.corycharlton.bittrexapi.internal.util.Ensure.*;
+import static com.corycharlton.bittrexapi.internal.util.Ensure.isNotNull;
+import static com.corycharlton.bittrexapi.internal.util.Ensure.isNotNullOrWhitespace;
+import static com.corycharlton.bittrexapi.internal.util.Ensure.isValidState;
 
 @SuppressWarnings("WeakerAccess")
 public final class ApplicationSettings extends Settings {
@@ -18,6 +20,9 @@ public final class ApplicationSettings extends Settings {
 
     private ApplicationSettings(@NonNull Context context) {
         super(context);
+
+        remove(KEY_KEY, true);
+        remove(KEY_SECRET, true);
     }
 
     @NonNull
@@ -36,16 +41,20 @@ public final class ApplicationSettings extends Settings {
         return getString(KEY_SECRET, StringUtils.EMPTY);
     }
 
+    public boolean isAuthenticationConfigured() {
+        return !StringUtils.isNullOrWhiteSpace(getKey()) && !StringUtils.isNullOrWhiteSpace(getSecret());
+    }
+
     public void setKey(@NonNull String key) {
         isNotNullOrWhitespace("key", key);
 
-        putString(KEY_KEY, key);
+        putString(KEY_KEY, key, true);
     }
 
     public void setSecret(@NonNull String secret) {
         isNotNullOrWhitespace("secret", secret);
 
-        putString(KEY_SECRET, secret);
+        putString(KEY_SECRET, secret, true);
     }
 
     // region Singleton

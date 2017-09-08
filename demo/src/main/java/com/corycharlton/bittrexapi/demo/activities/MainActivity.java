@@ -1,34 +1,23 @@
-package com.corycharlton.bittrexapi.demo;
+package com.corycharlton.bittrexapi.demo.activities;
 
-import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.corycharlton.bittrexapi.BittrexApiClient;
 import com.corycharlton.bittrexapi.BittrexApiLibraryInfo;
 import com.corycharlton.bittrexapi.Callback;
+import com.corycharlton.bittrexapi.demo.R;
 import com.corycharlton.bittrexapi.demo.settings.ApplicationSettings;
 import com.corycharlton.bittrexapi.extension.okhttp.OkHttpDownloader;
-import com.corycharlton.bittrexapi.request.GetBalanceRequest;
-import com.corycharlton.bittrexapi.request.GetBalancesRequest;
 import com.corycharlton.bittrexapi.request.GetCurrenciesRequest;
-import com.corycharlton.bittrexapi.request.GetDepositAddressRequest;
 import com.corycharlton.bittrexapi.request.Request;
-import com.corycharlton.bittrexapi.response.CancelOrderResponse;
-import com.corycharlton.bittrexapi.response.GetBalanceResponse;
-import com.corycharlton.bittrexapi.response.GetBalancesResponse;
 import com.corycharlton.bittrexapi.response.GetCurrenciesResponse;
-import com.corycharlton.bittrexapi.response.GetDepositAddressResponse;
-import com.corycharlton.bittrexapi.response.GetOpenOrdersResponse;
-import com.corycharlton.bittrexapi.response.PlaceBuyLimitOrderResponse;
-import com.corycharlton.bittrexapi.response.PlaceSellLimitOrderResponse;
-import com.corycharlton.bittrexapi.response.WithdrawResponse;
 
 import java.io.IOException;
-import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,5 +77,21 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(BittrexApiLibraryInfo.TAG, e.toString(), e);
         }
+
+        if (savedInstanceState == null && !ApplicationSettings.instance().isAuthenticationConfigured()) {
+            AuthenticationActivity.startActivity(this);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @NonNull
+    @Override
+    protected String getTag() {
+        return TAG;
     }
 }
