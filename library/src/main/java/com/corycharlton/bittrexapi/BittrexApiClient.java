@@ -121,6 +121,7 @@ public class BittrexApiClient {
      * @param <T> The {@link Response} returned by the request
      */
     @UiThread
+    //TODO: Unit test this...
     public <T extends Response> void executeAsync(@NonNull Request<T> request, Callback<T> callback) {
         new ExecuteAsyncTask<>(request, callback).execute();
     }
