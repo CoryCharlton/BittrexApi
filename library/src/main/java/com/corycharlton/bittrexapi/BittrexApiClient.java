@@ -262,6 +262,7 @@ public class BittrexApiClient {
 
         @Override
         protected T doInBackground(Void... voids) {
+            // TODO: Do I want to catch all exceptions and pass them to the callback?
             try {
                 return BittrexApiClient.this.execute(_request);
             } catch (IOException e) {
