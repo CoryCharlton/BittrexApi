@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/listPreferredItemHeight"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/content_vertical_margin"
+        android:paddingBottom="@dimen/content_vertical_margin"
+        >
+
+        <TextView
+            android:id="@+id/currency_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="70dp"
+            android:padding="0dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="BTC"
+            style="@style/TextAppearance.AppCompat.Large"
+            />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:padding="0dp"
+                android:text="@string/label_available" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="0dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/label_pending"
+                style="@style/TextAppearance.AppCompat.Caption"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="0dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/label_reserved"
+                style="@style/TextAppearance.AppCompat.Caption"
+                />
+
+            <View style="@style/Divider" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="0dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/label_total"
+                style="@style/TextAppearance.AppCompat.Caption"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="100dp"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/available_textview"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginLeft="@dimen/content_horizontal_margin"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:padding="0dp"
+                tools:text="6" />
+
+            <TextView
+                android:id="@+id/pending_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginLeft="@dimen/content_horizontal_margin"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:padding="0dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                tools:text="0.00000001"
+                style="@style/TextAppearance.AppCompat.Caption"
+                />
+
+            <TextView
+                android:id="@+id/reserved_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginLeft="@dimen/content_horizontal_margin"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:padding="0dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                tools:text="0.00000001"
+                style="@style/TextAppearance.AppCompat.Caption"
+                />
+
+            <View style="@style/Divider" />
+
+            <TextView
+                android:id="@+id/total_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginLeft="@dimen/content_horizontal_margin"
+                android:layout_marginStart="@dimen/content_horizontal_margin"
+                android:padding="0dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                tools:text="0.00000001"
+                style="@style/TextAppearance.AppCompat.Caption"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View style="@style/Divider" />
+
+</LinearLayout>

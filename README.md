@@ -44,7 +44,7 @@ are:
 For more details, see the project on [Bintray][]. For information about the
 latest versions, see the [Release notes][].
 
-[Bintray]: https://bintray.com/corycharlton/BittrexApi
+[Bintray]: https://bintray.com/corycharlton/bittrexapi
 [Release notes]: https://github.com/CoryCharlton/BittrexApi/blob/master/RELEASENOTES.md
 
 ## Build Status ##

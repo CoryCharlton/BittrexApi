@@ -1,2 +1,15 @@
 <resources>
+    <string name="enter_secret">Enter secret</string>
+    <string name="enter_key">Enter key</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="authentication">Authentication</string>
+    <string name="currencies">Currencies</string>
+    <string name="balances">Balances</string>
+    <string name="refresh">Refresh</string>
+    <string name="label_total">Total:</string>
+    <string name="label_reserved">Reserved:</string>
+    <string name="label_pending">Pending:</string>
+    <string name="label_available">Available:</string>
+    <string name="hide_zero_balances">Hide zero balances</string>
 </resources>

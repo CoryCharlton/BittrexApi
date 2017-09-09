@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.corycharlton.bittrexapi.demo.activities.GetBalancesActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:descendantFocusability="afterDescendants"
+        android:scrollbars="vertical"
+        />
+
+    <View style="@style/Divider" />
+
+    <CheckedTextView
+        android:id="@+id/hidezerobalances_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/content_vertical_margin"
+        android:layout_marginTop="@dimen/content_vertical_margin"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:gravity="center"
+        android:text="@string/hide_zero_balances"
+        android:textColor="?android:attr/textColorSecondary"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        />
+</LinearLayout>

@@ -117,7 +117,7 @@ public class BittrexApiClientTest {
             assertNotNull(result);
             assertEquals("BTC", result.currency());
             assertEquals(0.0000000119203, result.available(), 0.00000001);
-            assertEquals(0.0000000119203, result.balance(), 0.00000001);
+            assertEquals(0.0000000119203, result.total(), 0.00000001);
             assertEquals("CRYPTO-ADDRESS", result.cryptoAddress());
             assertEquals(0.00000000, result.pending(), 0.00000001);
         }
@@ -139,7 +139,7 @@ public class BittrexApiClientTest {
             assertNotNull(item);
             assertEquals("BTC", item.currency());
             assertEquals(0.0000000119203, item.available(), 0.00000001);
-            assertEquals(0.0000000119203, item.balance(), 0.00000001);
+            assertEquals(0.0000000119203, item.total(), 0.00000001);
             assertEquals("CRYPTO-ADDRESS-BTC", item.cryptoAddress());
             assertEquals(0.00000000, item.pending(), 0.00000001);
         }
