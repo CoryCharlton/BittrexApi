@@ -33,8 +33,10 @@ Next add a gradle compile dependency to the `build.gradle` file of your app
 module. The following will add a dependency to the library:
 
 ```gradle
-compile 'com.corycharlton.bittrexapi:bittrexapi:0.1.0'
+compile 'com.corycharlton.bittrexapi:bittrexapi:X.X.X'
 ```
+
+Where `X.X.X` is the version, which must match the version of the BittrexApi library being used.
 
 Additionally include any extensions modules you need. The available modules
 are:
@@ -51,8 +53,8 @@ latest versions, see the [Release notes][].
 
 master:
 
-[![Build Status](https://travis-ci.org/CoryCharlton/Android-Bittrex-Api.svg?branch=master)](https://travis-ci.org/CoryCharlton/Android-Bittrex-Api)
+[![Build Status](https://travis-ci.org/CoryCharlton/BittrexApi.svg?branch=master)](https://travis-ci.org/CoryCharlton/BittrexApi)
 
 dev:
 
-[![Build Status](https://travis-ci.org/CoryCharlton/Android-Bittrex-Api.svg?branch=dev)](https://travis-ci.org/CoryCharlton/Android-Bittrex-Api)
+[![Build Status](https://travis-ci.org/CoryCharlton/BittrexApi.svg?branch=dev)](https://travis-ci.org/CoryCharlton/BittrexApi)
