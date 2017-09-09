@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?attr/listPreferredItemHeight"
     android:background="?attr/selectableItemBackground"
     android:orientation="vertical"
     >
@@ -58,6 +57,7 @@
                 tools:text="BTC"
                 style="@style/TextAppearance.AppCompat.Subhead"
                 />
+
         </LinearLayout>
 
         <LinearLayout
@@ -100,6 +100,7 @@
                 style="@style/TextAppearance.AppCompat.Caption"
                 />
         </LinearLayout>
+
     </LinearLayout>
 
     <View style="@style/Divider" />

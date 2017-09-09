@@ -14,7 +14,6 @@ import static com.corycharlton.bittrexapi.internal.util.Ensure.isValidState;
 
 @SuppressWarnings("WeakerAccess")
 public final class ApplicationSettings extends Settings {
-    //TODO: Get default values from resources?
     public static final String KEY_HIDE_ZERO_BALANCES = "hide_zero_balances";
     public static final String KEY_KEY = "key";
     public static final String KEY_SECRET = "secret";
