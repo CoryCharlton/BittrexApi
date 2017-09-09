@@ -4,6 +4,10 @@ package com.corycharlton.bittrexapi.response;
 import com.corycharlton.bittrexapi.internal.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Represents an api response
+ * @param <T> The type of the {@link Response#result()}
+ */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class Response<T> {
     @SerializedName("message") private String _message;
