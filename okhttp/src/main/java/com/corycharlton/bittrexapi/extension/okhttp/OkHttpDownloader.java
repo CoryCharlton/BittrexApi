@@ -25,7 +25,7 @@ public class OkHttpDownloader implements Downloader {
         final OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(BittrexApiClient.DEFAULT_CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
                 .readTimeout(BittrexApiClient.DEFAULT_READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
-                .readTimeout(BittrexApiClient.DEFAULT_READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
+                .writeTimeout(BittrexApiClient.DEFAULT_WRITE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
                 .build();
 
         final okhttp3.Request.Builder okhttpRequestBuilder = new okhttp3.Request.Builder();

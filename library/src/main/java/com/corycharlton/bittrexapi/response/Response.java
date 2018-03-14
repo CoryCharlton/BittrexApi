@@ -1,6 +1,5 @@
 package com.corycharlton.bittrexapi.response;
 
-
 import com.corycharlton.bittrexapi.internal.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
